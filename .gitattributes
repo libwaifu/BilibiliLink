@@ -1,0 +1,8 @@
+* text=auto
+# 屏蔽文档与 build 文件统计
+project-docs/* linguist-documentation
+Packages/*.m linguist-generated=true
+# make things fun lol
+*.wls linguist-language=perl
+*.nb linguist-language=fsharp
+*.m linguist-language=NewLisp

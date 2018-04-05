@@ -1,0 +1,7 @@
+# idea 配置文件
+*.iml
+.idea/*
+
+*.nb
+!Kernel/*.nb
+!Resources/test/*.nb
