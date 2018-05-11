@@ -21,7 +21,7 @@ $RawAPIs=<|
 		"url"->StringTemplate["http://www.bilibilijj.com/Api/AvToCid/`aid`/0"],
 		"detail"->"哔哩哔哩唧唧的cid查询端口, 本机必须使用apikeys或cookies才能得到."
 	|>,
-	"hot"-><|
+	"photohot"-><|
 		"url"-><|
 			"illustration"->StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Doc/list?category=illustration&type=hot&page_num=`page`&page_size=20"],
 			"comic"->StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Doc/list?category=comic&type=hot&page_num=`page`&page_size=20"],
@@ -31,13 +31,24 @@ $RawAPIs=<|
 			"sifu"->StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Photo/list?category=sifu&type=hot&page_num=`page`&page_size=20"]
 		|>,
 		"detail"->"h.bilibili.com的热门作品."
+	|>,
+	"photorank"-><|
+		"url"-><|
+			"a"->StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Doc/ranklist?biz=1&rank_type=`time`&page_size=50"],
+			"b"->StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Doc/ranklist?biz=2&category=cos&rank_type=`time`&page_size=50"],
+			"c"->StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Doc/ranklist?biz=2&category=sifu&rank_type=`time`&page_size=50"]
+		|>,
+		"detail"->"h.bilibili.com的热门作品."
 	|>
 
 |>;
 
 
+
+
+(*https://github.com/Vespa314/bilibili-api/blob/master/api.md*)
 $RidList=<|
-	12-><|"father"->"未知","name"->"未知(隐藏)"|>,
+	12-><|"father"->"未知","name"->"公告(隐藏)"|>,
 	15-><|"father"->"电视剧","name"->"连载剧集(隐藏)"|>,
 	16-><|"father"->"游戏","name"->"flash游戏(隐藏)"|>,
 	17-><|"father"->"游戏","name"->"单机联机"|>,
@@ -140,8 +151,8 @@ $RidList=<|
 
 
 $APIs=<|
-	"hot"->Function[Table[$RawAPIs["hot","url",#][<|"page"->i|>],{i,0,24}]]
-
+	"PhotoHot"->Function[Table[$RawAPIs["photohot","url",#][<|"page"->i|>],{i,0,24}]]
+	"PhotoRank"->Function[Through[Values[test["url"]][<|"time" -> #|>]]]
 |>;
 SetAttributes[
 	{$RawAPIs,$RidList,$APIs},

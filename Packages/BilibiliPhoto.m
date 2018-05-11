@@ -19,6 +19,7 @@
 (*函数说明*)
 PicturesPack::ussage="内部函数, 图片地址对象.";
 PhotosLeaderboard::ussage="h.bilibili.com 图片作品排行榜.";
+BilibiliExport::NoFile = "`1` 已存在";
 (* ::Section:: *)
 (*程序包正体*)
 Begin["`Photos`"];
@@ -53,6 +54,15 @@ PicturesPack/:MakeBoxes[obj:PicturesPack[asc_?PicturesPackQ],form:(StandardForm|
 	]
 ];
 PicturesPack[ass_]["Data"]:=Lookup[ass,"Data"];
+PicturesPack[ass_]["Image"]:=Flatten["imgs"/.Lookup[ass,"Data"]];
+PicturesPack[ass_]["Markdown"]:=Module[
+	{text = PicturesPack2MD[Lookup[ass, "Data"]], name, file},
+	name = DateString[Lookup[ass, "Date"], {"Year", "-", "Month", "-", "Day", "-"}] <>ToString[Hash@text] <> ".md";
+	file = FileNameJoin[{$BilibiliLinkData, "Markdown", name}];
+	If[FileExistsQ[file], CreateFile[file], Message[BilibiliExport::NoFile, name]; Return[file]];
+	Export[file, text, "Text"]
+];
+
 
 
 
@@ -68,17 +78,28 @@ PictureDataRebuild[doc_Association]:=<|
 	"time"->FromUnixTime[doc["item","upload_time"]],
 	"imgs"->("img_src"/.doc["item","pictures"]),
 	"size"->If[KeyExistsQ[First@doc["item","pictures"],"img_size"],
-		N@Quantity[Total["img_size"/.doc["item","pictures"]],"Megabytes"],
+		N@Quantity[Total["img_size"/.doc["item","pictures"]]/1024,"Megabytes"],
 		Missing
 	]
 |>;
 $PhotoMap=<|"Cosplay"->"cos","其他服饰"->"sifu","插画"->"illustration","漫画"->"comic","其他画作"->"draw","全部画作"->"all"|>;
 PhotosLeaderboard[cat_]:=Module[
-	{$now=Now,raw,data},
-	raw=URLExecute[HTTPRequest[#,TimeConstraint->10],"RawJSON"]["data","items"]&/@$APIs["hot"][$PhotoMap[cat]];
+	{$now=Now,map,raw,data},
+	map=Switch[cat,
+		"Cosplay",$APIs["PhotoHot"]["cos"],
+		"其他服饰",$APIs["PhotoHot"]["sifu"],
+		"插画作品",$APIs["PhotoHot"]["illustration"],
+		"漫画作品",$APIs["PhotoHot"]["comic"],
+		"其他画作",$APIs["PhotoHot"]["draw"],
+		"全部画作",$APIs["PhotoHot"]["all"],
+		"日榜",$APIs["PhotoRank"]["day"],
+		"周榜",$APIs["PhotoRank"]["week"],
+		"月榜",$APIs["PhotoRank"]["month"]
+	];
+	raw=URLExecute[HTTPRequest[#,TimeConstraint->10],"RawJSON"]["data","items"]&/@map;
 	data=PictureDataRebuild/@Flatten[raw];
 	PicturesPack[<|
-		"data"->data,
+		"Data"->data,
 		"Category"->Text@cat,
 		"Repo"->Length@data,
 		"Count"->Length@Flatten["imgs"/.data],
@@ -87,6 +108,21 @@ PhotosLeaderboard[cat_]:=Module[
 		"Date"->$now
 	|>]
 ];
+PicturesPack2MD[doc_Association]:=StringJoin@Riffle[Join[
+	{
+		"### 作者: "<>doc["author"],
+		"### 主页: "<>"https://space.bilibili.com/"<>ToString[doc["uid"]]<>"/#/album",
+		"### 标题: "<>doc["title"],
+		"### 日期: "<>DateString@doc["time"],
+		"### 链接: "<>"https://h.bilibili.com/"<>ToString[doc["did"]]
+	},
+	"![]("<>#<>")"&/@doc["imgs"],
+	{"\r---\r\r"}
+],"\r"];
+PicturesPack2MD[docs_List]:=StringJoin[PicturesPack2MD/@docs];
+
+
+
 
 
 SetAttributes[
