@@ -3,9 +3,7 @@
 
 
 $APIs="";
-$RawAPIs="\r
-	原始的Bilibili提供的API\r
-	测试完毕请删除";
+$RawAPIs="内部变量, Bilibili提供的API";
 
 Begin["`APIs`"];
 
@@ -25,12 +23,12 @@ $RawAPIs=<|
 	|>,
 	"hot"-><|
 		"url"-><|
-			"插画"->StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Doc/list?category=illustration&type=hot&page_num=`page`&page_size=20"],
-			"漫画"->StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Doc/list?category=comic&type=hot&page_num=`page`&page_size=20"],
-			"其他"->StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Doc/list?category=draw&type=hot&page_num=`page`&page_size=20"],
-			"全部"->StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Doc/list?category=all&type=hot&page_num=`page`&page_size=20"],
-			"Cos"->StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Photo/list?category=cos&type=hot&page_num=`page`&page_size=20"],
-			"私服"->StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Photo/list?category=sifu&type=hot&page_num=`page`&page_size=20"]
+			"illustration"->StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Doc/list?category=illustration&type=hot&page_num=`page`&page_size=20"],
+			"comic"->StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Doc/list?category=comic&type=hot&page_num=`page`&page_size=20"],
+			"draw"->StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Doc/list?category=draw&type=hot&page_num=`page`&page_size=20"],
+			"all"->StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Doc/list?category=all&type=hot&page_num=`page`&page_size=20"],
+			"cos"->StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Photo/list?category=cos&type=hot&page_num=`page`&page_size=20"],
+			"sifu"->StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Photo/list?category=sifu&type=hot&page_num=`page`&page_size=20"]
 		|>,
 		"detail"->"h.bilibili.com的热门作品."
 	|>
@@ -145,4 +143,8 @@ $APIs=<|
 	"hot"->Function[Table[$RawAPIs["hot","url",#][<|"page"->i|>],{i,0,24}]]
 
 |>;
+SetAttributes[
+	{$RawAPIs,$RidList,$APIs},
+	{Protected,ReadProtected}
+];
 End[];
