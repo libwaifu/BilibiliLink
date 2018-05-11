@@ -59,7 +59,7 @@ PicturesPack[ass_]["Markdown"]:=Module[
 	{text = PicturesPack2MD[Lookup[ass, "Data"]], name, file},
 	name = DateString[Lookup[ass, "Date"], {"Year", "-", "Month", "-", "Day", "-"}] <>ToString[Hash@text] <> ".md";
 	file = FileNameJoin[{$BilibiliLinkData, "Markdown", name}];
-	If[FileExistsQ[file], CreateFile[file], Message[BilibiliExport::NoFile, name]; Return[file]];
+	If[FileExistsQ[file],Message[BilibiliExport::NoFile, name];Return[file],CreateFile[file]];
 	Export[file, text, "Text"]
 ];
 
@@ -94,7 +94,8 @@ PhotosLeaderboard[cat_]:=Module[
 		"全部画作",$APIs["PhotoHot"]["all"],
 		"日榜",$APIs["PhotoRank"]["day"],
 		"周榜",$APIs["PhotoRank"]["week"],
-		"月榜",$APIs["PhotoRank"]["month"]
+		"月榜",$APIs["PhotoRank"]["month"],
+		_,Echo[Text@"可选参数:Cosplay,其他服饰,插画作品,漫画作品,其他画作,全部画作,日榜,周榜,月榜"];Return[$Failed]
 	];
 	raw=URLExecute[HTTPRequest[#,TimeConstraint->10],"RawJSON"]["data","items"]&/@map;
 	data=PictureDataRebuild/@Flatten[raw];

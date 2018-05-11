@@ -151,8 +151,8 @@ $RidList=<|
 
 
 $APIs=<|
-	"PhotoHot"->Function[Table[$RawAPIs["photohot","url",#][<|"page"->i|>],{i,0,24}]]
-	"PhotoRank"->Function[Through[Values[test["url"]][<|"time" -> #|>]]]
+	"PhotoHot"->Function[Table[$RawAPIs["photohot","url",#][<|"page"->i|>],{i,0,24}]],
+	"PhotoRank"->Function[Through[Values[$RawAPIs["photorank","url"]][<|"time" -> #|>]]]
 |>;
 SetAttributes[
 	{$RawAPIs,$RidList,$APIs},
