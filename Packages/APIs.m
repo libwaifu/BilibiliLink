@@ -22,6 +22,17 @@ $RawAPIs=<|
 	"cid"-><|
 		"url"->StringTemplate["http://www.bilibilijj.com/Api/AvToCid/`aid`/0"],
 		"detail"->"哔哩哔哩唧唧的cid查询端口, 本机必须使用apikeys或cookies才能得到."
+	|>,
+	"hot"-><|
+		"url"-><|
+			"插画"->StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Doc/list?category=illustration&type=hot&page_num=`page`&page_size=20"],
+			"漫画"->StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Doc/list?category=comic&type=hot&page_num=`page`&page_size=20"],
+			"其他"->StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Doc/list?category=draw&type=hot&page_num=`page`&page_size=20"],
+			"全部"->StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Doc/list?category=all&type=hot&page_num=`page`&page_size=20"],
+			"Cos"->StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Photo/list?category=cos&type=hot&page_num=`page`&page_size=20"],
+			"私服"->StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Photo/list?category=sifu&type=hot&page_num=`page`&page_size=20"]
+		|>,
+		"detail"->"h.bilibili.com的热门作品."
 	|>
 
 |>;
@@ -131,7 +142,7 @@ $RidList=<|
 
 
 $APIs=<|
-
+	"hot"->Function[Table[$RawAPIs["hot","url",#][<|"page"->i|>],{i,0,24}]]
 
 |>;
 End[];
