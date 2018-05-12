@@ -38,9 +38,15 @@ $RawAPIs=<|
 			"b"->StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Doc/ranklist?biz=2&category=cos&rank_type=`time`&page_size=50"],
 			"c"->StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Doc/ranklist?biz=2&category=sifu&rank_type=`time`&page_size=50"]
 		|>,
-		"detail"->"h.bilibili.com的热门作品."
+		"detail"->"h.bilibili.com的排行榜."
+	|>,
+	"webshow"-><|
+		"url"-><|
+			"id"->StringTemplate["https://api.bilibili.com/x/web-show/res/locs?pf=0&id=`id`"]
+			"ids"->StringTemplate["https://api.bilibili.com/x/web-show/res/locs?pf=0&ids=`ids`"]
+		|>,
+		"detail"->"不明,可选参数见$LocPF0."
 	|>
-
 |>;
 
 
@@ -149,6 +155,24 @@ $RidList=<|
 	187-><|"father"->"电视剧","name"->"海外剧"|>
 |>;
 
+(* 编号全靠口胡, 服气
+URLExecute["https://api.bilibili.com/x/web-show/res/locs?pf=0&ids="<>StringJoin@StringRiffle[ToString /@ Range[1, 10000], ","], "RawJSON"]
+StringRiffle[Keys[%["data"]], ","] // Sort*)
+$LocPF0="21,23,29,31,34,40,42,44,52,58,64,70,76,82,88,94,
+	100,106,112,118,124,126,128,130,132,134,136,138,142,
+	148,151,152,153,160,162,243,245,247,249,251,253,255,
+	257,259,261,263,265,267,269,271,273,275,277,279,281,
+	283,285,287,289,291,293,295,395,403,405,406,412,413,
+	414,415,417,418,419,1466,1550,1554,1556,1558,1560,1562,
+	1564,1566,1568,1570,1572,1574,1576,1578,1580,1582,1584,
+	1586,1588,1590,1592,1594,1596,1598,1600,1602,1604,1606,
+	1608,1610,1612,1614,1616,1618,1620,1622,1624,1626,1628,
+	1630,1632,1634,1636,1660,1666,1670,1674,1680,1682,1919,
+	1920,1921,1922,1923,1966,2034,2047,2048,2057,2058,2061,
+	2062,2065,2066,2067,2078,2079,2207,2210,2211,2212,2213,
+	2214,2257,2260,2261,2262,2263,2264,2307,2308,2309,2319,
+	2341,2343,2345,2403,2452,2453,2462,2463,2472,2473,2482,
+	2483,2492,2493,2503";
 
 $APIs=<|
 	"PhotoHot"->Function[Table[$RawAPIs["photohot","url",#][<|"page"->i|>],{i,0,24}]],
