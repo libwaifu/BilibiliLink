@@ -12,7 +12,7 @@
 ## Introduce
 ![](/Readme/20180513120100591.png)
 
-BilibiliLink能....还没想好...
+BilibiliLink能....还没想好干嘛...
 
 ## Install
 ![](/Readme/20180512115721052.png)

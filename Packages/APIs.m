@@ -2,9 +2,9 @@
 
 
 
-$APIs="";
-$RawAPIs="内部变量, Bilibili提供的API";
-
+$APIs::ussage="";
+$RawAPIs::ussage="内部变量, Bilibili提供的API";
+$BilibiliLinkUA::ussage="";
 Begin["`APIs`"];
 
 
@@ -46,14 +46,36 @@ $RawAPIs=<|
 			"ids"->StringTemplate["https://api.bilibili.com/x/web-show/res/locs?pf=0&ids=`ids`"]
 		|>,
 		"detail"->"不明,可选参数见$LocPF0."
+	|>,
+	"vs"-><|
+		"url"->StringTemplate["http://api.bilibili.com/x/web-interface/newlist?rid=`rid`&pn=`pn`&ps=20&type=0"],
+		"detail"->"VideoSection, B站视频分区, rid 为分区编号, 详见下表 $RidList, pn 为页数, ps 为单页显示条目数, 锁死 20, tpye 用途不明"
 	|>
+
 |>;
 
+(*未整理的API
+
+
+tag用
+URLExecute["https://api.bilibili.com/x/tag/ranking/archives?tag_id=6776132&rid=47&type=0&pn=1&ps=100","RawJson"]["data"]
+https://api.bilibili.com/x/web-interface/ranking/tag?rid=47&tag_id=6776132
+
+
+手机载入页面
+http://app.bilibili.com/x/splash?plat=0&width=1080&height=1920
+*)
 
 
 
+(* ::Subsection::Closed:: *)
+(*Secret*)
 (*https://github.com/Vespa314/bilibili-api/blob/master/api.md*)
 $RidList=<|
+	0-><|
+		"name"->"根目录",
+		"url"->"http://www.bilibili.com"
+	|>,
 	1-><|
 		"name"->"动画",
 		"url"->"http://www.bilibili.com/video/douga.html",
@@ -216,7 +238,7 @@ $RidList=<|
 	|>,
 	41-><|
 		"name"->"暂置区",
-		"url"->"http://www.bilibili.comvideo/index.html",
+		"url"->"http://www.bilibili.com/video/index.html",
 		"parent"->12
 	|>,
 	43-><|
@@ -235,7 +257,7 @@ $RidList=<|
 		"parent"->25
 	|>,
 	46-><|
-		"name"->"其他",
+		"name"->"其他视频",
 		"url"->"http://www.bilibili.com/video/index.html",
 		"parent"->25
 	|>,
@@ -270,7 +292,7 @@ $RidList=<|
 		"parent"->27
 	|>,
 	53-><|
-		"name"->"其他",
+		"name"->"其他动漫",
 		"url"->"http://www.bilibili.com/video/douga-else-other-1.html",
 		"parent"->27
 	|>,
@@ -280,7 +302,7 @@ $RidList=<|
 		"parent"->117
 	|>,
 	55-><|
-		"name"->"其他",
+		"name"->"其他音乐",
 		"url"->"http://www.bilibili.com/video/music-video-other-1.html",
 		"parent"->28
 	|>,
@@ -335,7 +357,7 @@ $RidList=<|
 		"parent"->17
 	|>,
 	67-><|
-		"name"->"其他",
+		"name"->"其他游戏",
 		"url"->"http://www.bilibili.com/video/game-ctary-other-1.html",
 		"parent"->17
 	|>,
@@ -395,7 +417,7 @@ $RidList=<|
 		"parent"->75
 	|>,
 	79-><|
-		"name"->"其他",
+		"name"->"其他动物",
 		"url"->"http://www.bilibili.com/video/ent-animal-other-1.html",
 		"parent"->75
 	|>,
@@ -445,7 +467,7 @@ $RidList=<|
 		"parent"->34
 	|>,
 	90-><|
-		"name"->"其他",
+		"name"->"其他TV",
 		"url"->"http://www.bilibili.com/video/tv-drama-other-1.html",
 		"parent"->34
 	|>,
@@ -545,7 +567,7 @@ $RidList=<|
 		"parent"->15
 	|>,
 	113-><|
-		"name"->"其他",
+		"name"->"其他电视剧",
 		"url"->"http://www.bilibili.com/video/soap-three-oth-1.html",
 		"parent"->15
 	|>,
@@ -561,17 +583,17 @@ $RidList=<|
 	|>,
 	116-><|
 		"name"->"游戏",
-		"url"->"http://www.bilibili.comvideo/index.html",
+		"url"->"http://www.bilibili.com/video/index.html",
 		"parent"->12
 	|>,
 	117-><|
 		"name"->"音乐",
-		"url"->"http://www.bilibili.comvideo/index.html",
+		"url"->"http://www.bilibili.com/video/index.html",
 		"parent"->12
 	|>,
 	118-><|
 		"name"->"其他",
-		"url"->"http://www.bilibili.comvideo/index.html",
+		"url"->"http://www.bilibili.com/video/index.html",
 		"parent"->12
 	|>,
 	119-><|
@@ -785,7 +807,7 @@ $Secrets={
 	<|
 		"AppKey"->"84956560bc028eb7",
 		"Source"->"soimort/you-get",
-		"LastTest"->None
+		"LastTest"->"No Test"
 	|>,
 	<|
 		"AppKey"->"f3bb208b3d081dc8",
@@ -800,7 +822,8 @@ $Secrets={
 
 $APIs=<|
 	"PhotoHot"->Function[Table[$RawAPIs["photohot","url",#][<|"page"->i|>],{i,0,24}]],
-	"PhotoRank"->Function[Through[Values[$RawAPIs["photorank","url"]][<|"time" -> #|>]]]
+	"PhotoRank"->Function[Through[Values[$RawAPIs["photorank","url"]][<|"time" -> #|>]]],
+	"RidList"->$RidList
 |>;
 SetAttributes[
 	{$RawAPIs,$RidList,$APIs},
