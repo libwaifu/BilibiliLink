@@ -5,17 +5,13 @@
 [![Release Vision](https://img.shields.io/badge/release-v0.2.0-ff69b4.svg)](https://github.com/GalAster/BilibiliLink/releases)
 [![Repo Size](https://img.shields.io/github/repo-size/GalAster/BilibiliLink.svg)](https://github.com/GalAster/BilibiliLink.git)
 
-![创始四图](https://i.loli.net/2018/05/12/5af6f45da50ab.jpg)
-
----
-
 ## Introduce
-![](/Readme/20180513120100591.png)
+![](https://i.loli.net/2018/05/13/5af7f64fa64ff.png)
 
 BilibiliLink能....还没想好干嘛...
 
 ## Install
-![](/Readme/20180512115721052.png)
+![](https://i.loli.net/2018/05/13/5af7f64fad2ca.png)
 ### 自动安装
 
 版本号达到 v0.6.0 以后我会提交到部署服务器.
@@ -47,7 +43,7 @@ rm -rf BilibiliLink
 ```
 
 ## Show Time
-![](/Readme/20180512115309589.png)
+![](https://i.loli.net/2018/05/13/5af7f64f7a266.png)
 
 ```mma
 << "BilibiliLink`
@@ -57,7 +53,7 @@ link["Markdown"]
 ```
 
 ## Todo List
-![](/Readme/20180512115529218.png)
+![](https://i.loli.net/2018/05/13/5af7f64f9bc4c.png)
 
 - 相册
 - 专栏
@@ -65,7 +61,7 @@ link["Markdown"]
 - 用户
 
 ## Ideas
-![](/Readme/20180512115455719.png)
+![](https://i.loli.net/2018/05/13/5af7f64f80b0f.png)
 1. 任何创意欢迎 git pull request, 或联系知乎[酱紫君](https://www.zhihu.com/people/GalAster).
 2. 任何的意见和建议, 提交 github issue 或者加QQ群1014125反馈.
 

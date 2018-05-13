@@ -48,14 +48,24 @@ $RawAPIs=<|
 		"detail"->"不明,可选参数见$LocPF0."
 	|>,
 	"vs"-><|
+		"url"->StringTemplate["http://api.bilibili.com/x/web-interface/newlist?rid=`rid`"],
+		"detail"->"VideoSection, B站视频分区, rid 为分区编号, 详见下表 $RidList."
+	|>,
+	"vspage"-><|
 		"url"->StringTemplate["http://api.bilibili.com/x/web-interface/newlist?rid=`rid`&pn=`pn`&ps=20&type=0"],
-		"detail"->"VideoSection, B站视频分区, rid 为分区编号, 详见下表 $RidList, pn 为页数, ps 为单页显示条目数, 锁死 20, tpye 用途不明"
+		"detail"->"VideoSectionPage, pn 为页数, ps 为单页显示条目数, 锁死 20, tpye 用途不明"
+	|>,
+	"ar"-><|
+		"url"->StringTemplate["https://api.bilibili.com/x/article/rank/list?cid=`cid`"],
+		"detail"->"ArticleRank, 专栏文章全站排名, cid 为时段, 可选值有四个:1, 月榜, 2, 周榜, 3, 昨日, 4, 前天",
+		"from"->"https://www.bilibili.com/read/ranking"
 	|>
-
 |>;
 
 (*未整理的API
 
+
+https://api.bilibili.com/x/article/rank/list?cid=4
 
 tag用
 URLExecute["https://api.bilibili.com/x/tag/ranking/archives?tag_id=6776132&rid=47&type=0&pn=1&ps=100","RawJson"]["data"]
@@ -74,7 +84,8 @@ http://app.bilibili.com/x/splash?plat=0&width=1080&height=1920
 $RidList=<|
 	0-><|
 		"name"->"根目录",
-		"url"->"http://www.bilibili.com"
+		"url"->"http://www.bilibili.com",
+		"parent"->Missing
 	|>,
 	1-><|
 		"name"->"动画",
@@ -823,7 +834,8 @@ $Secrets={
 $APIs=<|
 	"PhotoHot"->Function[Table[$RawAPIs["photohot","url",#][<|"page"->i|>],{i,0,24}]],
 	"PhotoRank"->Function[Through[Values[$RawAPIs["photorank","url"]][<|"time" -> #|>]]],
-	"RidList"->$RidList
+	"RidList"->$RidList,
+	"VideoSection"->Function[$RawAPIs["vs"]["rid"->#]]
 |>;
 SetAttributes[
 	{$RawAPIs,$RidList,$APIs},
