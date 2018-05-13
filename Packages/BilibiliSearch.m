@@ -1,0 +1,3 @@
+Begin["`Search`"];
+
+End[];

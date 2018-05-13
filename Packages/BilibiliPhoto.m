@@ -78,7 +78,7 @@ PictureDataRebuild[doc_Association]:=<|
 	"time"->FromUnixTime[doc["item","upload_time"]],
 	"imgs"->("img_src"/.doc["item","pictures"]),
 	"size"->If[KeyExistsQ[First@doc["item","pictures"],"img_size"],
-		N@Quantity[Total["img_size"/.doc["item","pictures"]]/1024,"Megabytes"],
+		Quantity[Total["img_size"/.doc["item","pictures"]]/1024.0,"Megabytes"],
 		Missing
 	]
 |>;
