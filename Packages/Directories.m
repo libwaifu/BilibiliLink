@@ -20,7 +20,7 @@ $BilibiliLinkIcons[name_]:=$BilibiliLinkIcons[name]=Switch[name,
 
 
 SetAttributes[
-	{$BilibiliLinkDirectory,$BLID},
+	{$BLID},
 	{Protected,ReadProtected}
 ];
 End[];

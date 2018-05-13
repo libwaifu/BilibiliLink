@@ -5,10 +5,16 @@
 [![Release Vision](https://img.shields.io/badge/release-v0.2.0-ff69b4.svg)](https://github.com/GalAster/BilibiliLink/releases)
 [![Repo Size](https://img.shields.io/github/repo-size/GalAster/BilibiliLink.svg)](https://github.com/GalAster/BilibiliLink.git)
 
+![](https://i.loli.net/2018/05/12/5af6f45da50ab.jpg)
+
 ## Introduce
 ![](https://i.loli.net/2018/05/13/5af7f64fa64ff.png)
 
-BilibiliLink能....还没想好干嘛...
+BilibiliLink 提供了一系列获取B站数据的方法, 计划中的内容有, 文章下载, 文章评论下载, 画师画作下载, 评论下载, cosplay下载, 视频跟踪等等.
+
+有什么想要的功能也可以在 github issue 中提出哦!
+
+并非所有页面上的东西都能获得, 有些看着是文字, 其实是图片, 那就没法抓取了.
 
 ## Install
 ![](https://i.loli.net/2018/05/13/5af7f64fad2ca.png)
@@ -30,13 +36,13 @@ SystemOpen[FileNameJoin@{$UserBaseDirectory, "Applications"}]
 git clone git@github.com:GalAster/BilibiliLink.git --depth 1
 ```
 
-### Update
+#### Update
 
 ```bash
 git pull
 ```
 
-### Uninstall
+#### Uninstall
 
 ```bash
 rm -rf BilibiliLink
@@ -55,10 +61,7 @@ link["Markdown"]
 ## Todo List
 ![](https://i.loli.net/2018/05/13/5af7f64f9bc4c.png)
 
-- 相册
-- 专栏
-- 搜索
-- 用户
+- 反正很多就是了
 
 ## Ideas
 ![](https://i.loli.net/2018/05/13/5af7f64f80b0f.png)

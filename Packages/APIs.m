@@ -67,13 +67,17 @@ $RawAPIs=<|
 
 https://api.bilibili.com/x/article/rank/list?cid=4
 
-tag用
+// tag用
 URLExecute["https://api.bilibili.com/x/tag/ranking/archives?tag_id=6776132&rid=47&type=0&pn=1&ps=100","RawJson"]["data"]
 https://api.bilibili.com/x/web-interface/ranking/tag?rid=47&tag_id=6776132
 
 
-手机载入页面
+// 手机载入页面
 http://app.bilibili.com/x/splash?plat=0&width=1080&height=1920
+//IPHONE 和安卓一样
+http://app.bilibili.com/x/splash?channel=appstore&height=1334&plat=1&width=750
+//IPAD
+http://app.bilibili.com/x/splash?channel=appstore&height=1536&plat=1&width=2048
 *)
 
 
