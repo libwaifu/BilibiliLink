@@ -27,15 +27,15 @@ BilibiliDownloadObject/:MakeBoxes[obj:BilibiliDownloadObject[asc_?BilibiliDownlo
 ];
 BilibiliDownloadObject[ass_][func_String]:=Switch[
 	func,
-	"Do",BilibiliDownload[ass_],
-	"Download",BilibiliDownload[ass_],
+	"do",BilibiliDownload[ass],
+	"Download",BilibiliDownload[ass],
 	"Data",Dataset[ass["Data"]],
 	_,BilibiliDownloadHelp[]
 ];
 BilibiliDownloadObject[ass_][func_String,{para__}]:=Switch[
 	func,
-	"Do",BilibiliDownload[ass_,para],
-	"Download",BilibiliDownload[ass_,para],
+	"do",BilibiliDownload[ass,para],
+	"Download",BilibiliDownload[ass,para],
 	_,BilibiliDownloadHelp[]
 ];
 BilibiliDownloadObject[ass_][___]:=BilibiliDownloadHelp[];

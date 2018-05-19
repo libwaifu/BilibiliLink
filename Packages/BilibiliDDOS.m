@@ -1,4 +1,5 @@
 BilibiliVipEmoji::usage="xxx";
+BilibiliIndexIcon::usage="xxx";
 Begin["`DDOS`"];
 VipEmojiReshape[line_]:=Block[
 	{drop=KeyDrop[line["emojis"],{"state","remark"}]},
@@ -16,4 +17,20 @@ BilibiliVipEmoji[]:=Block[
 		"Size"->Style["Unknow",Red]
 	|>
 ]];
+IndexIconReshape[line_]:=<|
+	"ID"->line["id"],
+	"Name"->line["title"],
+	"URL"->line["icon"]
+|>;
+BilibiliIndexIcon[]:=Block[
+	{get=URLExecute["https://www.bilibili.com/index/index-icon.json","RawJSON"]["fix"]},
+	BilibiliDownloadObject[<|
+		"Date"->Now,
+		"Category"->"Bilibili Index Icon",
+		"Data"->SortBy[Flatten[IndexIconReshape/@get],"ID"],
+		"Path"->FileNameJoin@{$BilibiliLinkData,"Image","Icon"},
+		"Size"->Style["Unknow",Red]
+	|>
+]];
+BilibiliIndexIcon["Raw"]=URLExecute["https://www.bilibili.com/index/index-icon.json","RawJSON"]["fix"];
 End[]

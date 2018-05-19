@@ -17,7 +17,7 @@ BilibiliDownloadLine[line_,OptionsPattern[]]:=Block[
 	file=FileNameJoin[{path,line["Name"]<>"."<>Last@StringSplit[line["URL"],"."]}];
 	If[FileExistsQ@file,Return[]];
 	OptionValue[Method][line["URL"],file]
-]
+];
 
 BilibiliDownload[ass_]:=Block[
 	{path=ass["Path"],data=ass["Data"]},
