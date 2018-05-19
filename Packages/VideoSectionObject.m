@@ -31,9 +31,11 @@ SetAttributes[
 	{Protected,ReadProtected}
 ];
 End[];
-(* BilibiliVideoSectionObjectExample=<|
+(*
+BilibiliVideoSectionObjectExample=<|
 	"Me"-><|"name"->"MAD\[CenterDot]AMV","url"->"http://www.bilibili.com/video/douga-mad-1.html","parent"->1|>,
 	"Parent"-><|"name"->"动画","url"->"http://www.bilibili.com/video/douga.html","parent"->0|>,
 	"Count"->224270,
 	"Date"->DateObject[{2018, 5, 12, 16, 0, 0}, "Instant", "Gregorian", 8]
-|>*)
+|>
+*)

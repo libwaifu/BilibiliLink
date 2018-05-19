@@ -1,0 +1,19 @@
+BilibiliVipEmoji::usage="xxx";
+Begin["`DDOS`"];
+VipEmojiReshape[line_]:=Block[
+	{drop=KeyDrop[line["emojis"],{"state","remark"}]},
+	Append[
+		<|"ID"->#["id"],"URL"->#["url"],"Name"->StringTake[#["name"],2;;-2]|>&/@drop,
+		<|"ID"->line["pid"],"URL"->line["purl"],"Name"->line["pname"]|>
+	]];
+BilibiliVipEmoji[]:=Block[
+	{get=URLExecute["http://api.bilibili.com/x/v2/reply/emojis","RawJSON"]["data"]},
+	BilibiliDownloadObject[<|
+		"Date"->Now,
+		"Category"->"Bilibili Vip Emoji",
+		"Data"->SortBy[Flatten[VipEmojiReshape/@get],"ID"],
+		"Path"->FileNameJoin@{$BilibiliLinkData,"Image","Emoji"},
+		"Size"->Style["Unknow",Red]
+	|>
+]];
+End[]
