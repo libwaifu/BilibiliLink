@@ -17,21 +17,21 @@
 (*4.如果修改了源代码，包含一份代码修改说明。*)
 (* ::Section:: *)
 (*函数说明*)
-PicturesPack::ussage="内部函数, 图片地址对象.";
+BilibiliPicturesPackObject::ussage="内部函数, 图片地址对象.";
 PhotosLeaderboard::ussage="h.bilibili.com 图片作品排行榜.";
 BilibiliExport::NoFile = "`1` 已存在";
 (* ::Section:: *)
 (*程序包正体*)
 Begin["`Photos`"];
 (* ::Subsection::Closed:: *)
-(*PicturesPackPbject*)
-PicturesPackQ::ussage="PicturesPack 合法性检测";
+(*BilibiliPicturesPackObjectPbject*)
+BilibiliPicturesPackObjectQ::ussage="BilibiliPicturesPackObject 合法性检测";
 
-PicturesPackQ[asc_?AssociationQ] := AllTrue[{"Date","Count"}, KeyExistsQ[asc, #]&]
-PicturesPackQ[_] = False;
-Format[PicturesPack[___],OutputForm]:="PicturesPack[<>]";
-Format[PicturesPack[___],InputForm]:="PicturesPack[<>]";
-PicturesPack/:MakeBoxes[obj:PicturesPack[asc_?PicturesPackQ],form:(StandardForm|TraditionalForm)]:=Module[
+BilibiliPicturesPackObjectQ[asc_?AssociationQ] := AllTrue[{"Date","Count"}, KeyExistsQ[asc, #]&]
+BilibiliPicturesPackObjectQ[_] = False;
+Format[BilibiliPicturesPackObject[___],OutputForm]:="BilibiliPicturesPackObject[<>]";
+Format[BilibiliPicturesPackObject[___],InputForm]:="BilibiliPicturesPackObject[<>]";
+BilibiliPicturesPackObject/:MakeBoxes[obj:BilibiliPicturesPackObject[asc_?BilibiliPicturesPackObjectQ],form:(StandardForm|TraditionalForm)]:=Module[
 	{above,below},
 	above={
 		{BoxForm`SummaryItem[{"Type: ", "PicturesPack"}]},
@@ -46,16 +46,16 @@ PicturesPack/:MakeBoxes[obj:PicturesPack[asc_?PicturesPackQ],form:(StandardForm|
 	BoxForm`ArrangeSummaryBox[
 		"BilibiliLink",
 		obj,
-		$BilibiliLinkIcons["PicturesPack"],
+		$BilibiliLinkIcons["BilibiliPicturesPackObject"],
 		above,
 		below,
 		form,
 		"Interpretable" -> Automatic
 	]
 ];
-PicturesPack[ass_]["Data"]:=Lookup[ass,"Data"];
-PicturesPack[ass_]["Image"]:=Flatten["imgs"/.Lookup[ass,"Data"]];
-PicturesPack[ass_]["Markdown"]:=Module[
+BilibiliPicturesPackObject[ass_]["Data"]:=Lookup[ass,"Data"];
+BilibiliPicturesPackObject[ass_]["Image"]:=Flatten["imgs"/.Lookup[ass,"Data"]];
+BilibiliPicturesPackObject[ass_]["Markdown"]:=Module[
 	{text = PicturesPack2MD[Lookup[ass, "Data"]], name, file},
 	name = DateString[Lookup[ass, "Date"], {"Year", "-", "Month", "-", "Day", "-"}] <>ToString[Hash@text] <> ".md";
 	file = FileNameJoin[{$BilibiliLinkData, "Markdown", name}];
@@ -99,7 +99,7 @@ PhotosLeaderboard[cat_]:=Module[
 	];
 	raw=URLExecute[HTTPRequest[#,TimeConstraint->10],"RawJSON"]["data","items"]&/@map;
 	data=PictureDataRebuild/@Flatten[raw];
-	PicturesPack[<|
+	BilibiliPicturesPackObject[<|
 		"Data"->data,
 		"Category"->Text@cat,
 		"Repo"->Length@data,

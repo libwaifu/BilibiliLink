@@ -59,10 +59,18 @@ $RawAPIs=<|
 		"url"->StringTemplate["https://api.bilibili.com/x/article/rank/list?cid=`cid`"],
 		"detail"->"ArticleRank, 专栏文章全站排名, cid 为时段, 可选值有四个:1, 月榜, 2, 周榜, 3, 昨日, 4, 前天",
 		"from"->"https://www.bilibili.com/read/ranking"
+	|>,
+	"captcha"-><|
+		"url"->"https://passport.bilibili.com/captcha",
+		"detail"->"返回验证码"
 	|>
 |>;
 
 (*未整理的API
+
+
+
+
 
 
 https://api.bilibili.com/x/article/rank/list?cid=4
