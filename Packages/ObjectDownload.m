@@ -16,7 +16,7 @@ BilibiliDownloadObject/:MakeBoxes[obj:BilibiliDownloadObject[asc_?BilibiliDownlo
 	};
 	below={
 		{BoxForm`SummaryItem[{"Date: ",DateString[asc["Date"]]}]},
-		{BoxForm`SummaryItem[{"Path: ",asc["Path"]}]}
+		{BoxForm`SummaryItem[{"Path: ",File[asc["Path"]]}]}
 	};
 	BoxForm`ArrangeSummaryBox[
 		"BilibiliLink",obj,
@@ -59,11 +59,17 @@ BilibiliDownloadLine[line_,OptionsPattern[]]:=Block[
 	If[FileExistsQ@file,Return[]];
 	OptionValue[Method][line["URL"],file]
 ];
-
-BilibiliDownload[ass_]:=Block[
-	{path=ass["Path"],data=ass["Data"]},
+Options[BilibiliDownload]={
+	Path->Automatic,
+	Method->URLDownloadSubmit,
+	Return->True
+};
+BilibiliDownload[ass_,OptionsPattern[]]:=Block[
+	{data=ass["Data"],path},
+	path=If[OptionValue[Path]==Automatic,ass["Path"],OptionValue[Path]];
 	If[!FileExistsQ[path],CreateDirectory[path]];
-	BilibiliDownloadLine[#,Path->path]&/@data;
+	BilibiliDownloadLine[#,Path->path,Method->OptionValue[Method]]&/@data;
+	If[OptionValue[Return],Return[ass["Path"]]];
 ];
 
 

@@ -3,11 +3,14 @@
 BilibiliAlbumIndex::ussage="";
 
 Begin["`Photo`"];
-BilibiliAlbumIndex[]:=Module[{$now=Now,get,data},
+BilibiliAlbumIndex[]:=Module[
+	{$now=Now,get,bg,imgs,data},
 	get=URLExecute["https://api.vc.bilibili.com/link_draw/v2/Doc/home","RawJSON"]["data"];
+	bg=<|"Name"->ToString[Now//UnixTime]<>"_0","URL"->get["bg_img"]|>;
+	imgs=MapIndexed[<|"Name"->StringJoin[ToString/@{UnixTime@Now,_,First@#2}],"URL"->#1|>&,"img_src"/.get["items"]];
 	data=<|
 		"DataType"->"AlbumIndexPage",
-		"Data"->MapIndexed[<|"Name"->StringJoin[ToString/@{UnixTime@Now,_,First@#2}],"URL"->#1|>&,"img_src"/.get["items"]]
+		"ImageList"->Prepend[imgs,bg]
 	|>;
 	BilibiliAlbumObject[<|
 		"Data"->data,
