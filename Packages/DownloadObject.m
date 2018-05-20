@@ -39,4 +39,6 @@ BilibiliDownloadObject[ass_][func_String,{para__}]:=Switch[
 	_,BilibiliDownloadHelp[]
 ];
 BilibiliDownloadObject[ass_][___]:=BilibiliDownloadHelp[];
+
+BilibiliDownload[BilibiliDownloadObject[ass_]]:=BilibiliDownload[ass];
 End[]
