@@ -1,22 +1,4 @@
-(* ::Package:: *)
-(* ::Title:: *)
-(*BilibiliColumns*)
-(* ::Subchapter:: *)
-(*程序包介绍*)
-(* ::Text:: *)
-(*Mathematica Package*)
-(*Created by Mathematica Plugin for IntelliJ IDEA*)
-(**)
-(* ::Text:: *)
-(*Creation Date: 2018-03-12*)
-(*Copyright: Mozilla Public License Version 2.0*)
-(* ::Program:: *)
-(*1.软件产品再发布时包含一份原始许可声明和版权声明。*)
-(*2.提供快速的专利授权。*)
-(*3.不得使用其原始商标。*)
-(*4.如果修改了源代码，包含一份代码修改说明。*)
-(* ::Section:: *)
-(*函数说明*)
+
 BilibiliArticle::usage = "将HTML转化为Markdown格式.";
 (* ::Section:: *)
 (*程序包正体*)
@@ -73,8 +55,8 @@ XMLElement["span",{"class"\[Rule]class_},{text_}]\[RuleDelayed]StringTemplate[
 
 (* ::Subsection::Closed:: *)
 (*附加设置*)
-End[];
 SetAttributes[
 	{},
 	{Protected,ReadProtected}
 ];
+End[]

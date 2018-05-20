@@ -1,5 +1,6 @@
 BilibiliVipEmoji::usage="xxx";
 BilibiliIndexIcon::usage="xxx";
+BilibiliErrorPage::usage="xxx";
 Begin["`DDOS`"];
 VipEmojiReshape[line_]:=Block[
 	{drop=KeyDrop[line["emojis"],{"state","remark"}]},

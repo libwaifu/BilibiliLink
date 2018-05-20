@@ -1,9 +1,9 @@
-
-BilibiliDownloadObject::ussage="BilibiliDownloadObject 合法性检测";
+BilibiliDownload::ussage="";
+BilibiliDownloadObject::ussage="";
 Begin["`Object`"];
 BilibiliDownloadObjectQ::ussage="BilibiliDownloadObject 合法性检测";
-BilibiliDownloadObjectQ[asc_?AssociationQ]:=AllTrue[{"Data","Path","Size"},KeyExistsQ[asc,#]&]
-BilibiliDownloadObjectQ[_]=False;
+BilibiliDownloadObjectQ[asc_?AssociationQ]:=AllTrue[{"Path","Data"},KeyExistsQ[asc,#]&];
+BilibiliDownloadObjectQ[_]:=False;
 Format[BilibiliDownloadObject[___],OutputForm]:="BilibiliDownloadObject[<>]";
 Format[BilibiliDownloadObject[___],InputForm]:="BilibiliDownloadObject[<>]";
 BilibiliDownloadObject/:MakeBoxes[obj:BilibiliDownloadObject[asc_?BilibiliDownloadObjectQ],form:(StandardForm|TraditionalForm)]:=Module[
@@ -26,7 +26,12 @@ BilibiliDownloadObject/:MakeBoxes[obj:BilibiliDownloadObject[asc_?BilibiliDownlo
 	]
 ];
 
-
+(*Aid Functions*)
+SizeConvert[x_Integer]:=N@Piecewise[{
+	{Quantity[x, "Kilobytes"],x<1024/2},
+	{Quantity[x/1024,"Megabytes"],1024^2/2>x>=1024/2},
+	{Quantity[x/1024^2,"Gigabytes"],x>=1024^2/2}
+}];
 
 
 BilibiliDownloadObject[ass_][func_String]:=Switch[
@@ -45,4 +50,22 @@ BilibiliDownloadObject[ass_][func_String,{para__}]:=Switch[
 BilibiliDownloadObject[ass_][___]:=BilibiliDownloadHelp[];
 
 BilibiliDownload[BilibiliDownloadObject[ass_]]:=BilibiliDownload[ass];
+
+
+Options[BilibiliDownloadLine]={Path->$TemporaryDirectory,Method->URLDownloadSubmit};
+BilibiliDownloadLine[line_,OptionsPattern[]]:=Block[
+	{path=OptionValue[Path],file},
+	file=FileNameJoin[{path,line["Name"]<>"."<>Last@StringSplit[line["URL"],"."]}];
+	If[FileExistsQ@file,Return[]];
+	OptionValue[Method][line["URL"],file]
+];
+
+BilibiliDownload[ass_]:=Block[
+	{path=ass["Path"],data=ass["Data"]},
+	If[!FileExistsQ[path],CreateDirectory[path]];
+	BilibiliDownloadLine[#,Path->path]&/@data;
+];
+
+
+
 End[]
