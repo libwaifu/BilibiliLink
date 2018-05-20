@@ -49,7 +49,7 @@ ImageSizeConvert[size_]:=Switch[
 BilibiliAlbumObject[ass_][func_String]:=Switch[
 	func,
 	"Data",Lookup[ass,"Data"],
-	"Image",Flatten["imgs"/.Lookup[ass,"Data"]];
+	"Image",Flatten["imgs"/.Lookup[ass,"Data"]],
 	"Markdown",PicturePack2MD[ass],
 	"do",AlbumDownload[ass],
 	"Download",AlbumDownload[ass],
@@ -66,7 +66,7 @@ BilibiliAlbumObject[ass_][___]:=BilibiliPicturePackHelp[];
 
 (*Method*)
 AlbumDownload[raw_]:=Switch[
-	raw["DataType"],
+	raw["Data","DataType"],
 	"AlbumIndexPage",AlbumIndexPageDownload[raw]
 
 

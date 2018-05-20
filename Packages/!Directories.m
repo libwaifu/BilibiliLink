@@ -12,7 +12,7 @@ $BilibiliLinkData=FileNameJoin[{$UserBaseDirectory, "ApplicationData", "Bilibili
 $BLID::ussage="BilibiliLinkIconsDirectory,BilibiliLink 图片图标的存放路径.";
 $BLID=FileNameJoin[{$BilibiliLinkDirectory,"Resources","ico"}];
 $BilibiliLinkIcons[name_]:=$BilibiliLinkIcons[name]=Switch[name,
-	"BilibiliPicturePackObject",
+	"BilibiliAlbumObject",
 	Image[Import[FileNameJoin[{$BLID,"BilibiliAlbumObject.jpg"}],"jpg"],ImageSize->{Automatic, 140}],
 	"BilibiliVideoSectionObject",
 	Image[Import[FileNameJoin[{$BLID,"BilibiliVideoSectionObject.png"}],"png"],ImageSize->{Automatic,53}],
