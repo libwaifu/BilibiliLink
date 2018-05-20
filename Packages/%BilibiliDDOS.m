@@ -13,7 +13,7 @@ BilibiliVipEmoji[]:=Block[
 		"Date"->Now,
 		"Category"->"Bilibili Vip Emoji",
 		"Data"->SortBy[Flatten[VipEmojiReshape/@get],"ID"],
-		"Path"->FileNameJoin@{$BilibiliLinkData,"Image","Emoji"},
+		"Path"->File@FileNameJoin[{$BilibiliLinkData,"Image","Emoji"}],
 		"Size"->UnitConvert[Quantity[5021696., "Bytes"], "Megabytes"]
 	|>
 ]];
@@ -32,7 +32,7 @@ BilibiliIndexIcon[]:=Block[
 		"Date"->Now,
 		"Category"->"Bilibili Index Icon",
 		"Data"->SortBy[Flatten[IndexIconReshape/@get],"ID"],
-		"Path"->FileNameJoin@{$BilibiliLinkData,"Image","Icon"},
+		"Path"->File@FileNameJoin[{$BilibiliLinkData,"Image","Icon"}],
 		"Size"->UnitConvert[Quantity[8015872., "Bytes"], "Megabytes"]
 	|>
 ]];
@@ -79,7 +79,7 @@ BilibiliErrorPage[]:=Block[
 		"Date"->Now,
 		"Category"->"Bilibili Error Page",
 		"Data"->SortBy[data,"ID"],
-		"Path"->FileNameJoin@{$BilibiliLinkData,"Image","ErrorPage"},
+		"Path"->File@FileNameJoin[{$BilibiliLinkData,"Image","ErrorPage"}],
 		"Size"->UnitConvert[Quantity[58363904., "Bytes"], "Megabytes"]
 	|>
 ]];

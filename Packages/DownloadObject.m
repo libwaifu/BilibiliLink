@@ -25,6 +25,10 @@ BilibiliDownloadObject/:MakeBoxes[obj:BilibiliDownloadObject[asc_?BilibiliDownlo
 		"Interpretable"->Automatic
 	]
 ];
+
+
+
+
 BilibiliDownloadObject[ass_][func_String]:=Switch[
 	func,
 	"do",BilibiliDownload[ass],
