@@ -2,6 +2,7 @@
 
 BilibiliAlbumIndex::usage="";
 PhotosRange::usage="";
+PhotosHot::usage="";
 Begin["`Photo`"];
 $PhotoCategoryMap=<|
 	1-><|"Name"->"插画","Alias"->"Illustration","Key"->"illustration","Url"->"https://h.bilibili.com/eden/draw_area#/illustration"|>,
@@ -36,7 +37,7 @@ $PhotosAPI=<|
 	]]
 |>;
 
-PhotosRangeReshape::ussage="PhotosRange的数据清洗.";
+PhotosRangeReshape::usage="PhotosRange的数据清洗.";
 PhotosRangeReshape[doc_Association]:=<|
 	"uid"->doc["user","uid"],
 	"author"->doc["user","name"],
@@ -45,7 +46,7 @@ PhotosRangeReshape[doc_Association]:=<|
 		doc["item","title"],
 		"无名_"<>ToString[doc["item","doc_id"]]
 	],
-	"time"->doc["item","upload_time"],
+	"time"->DateObject[doc["item","upload_time"]],
 	"imgs"->("img_src"/.doc["item","pictures"]),
 	"size"->If[KeyExistsQ[First@doc["item","pictures"],"img_size"],
 		Total["img_size"/.doc["item","pictures"]],
@@ -67,7 +68,7 @@ PhotosRange[a_Integer,b_Integer,OptionsPattern[]]:=Module[
 	];
 	BilibiliAlbumObject[<|"Data"->data,
 		"Category"->"PhotosRange",
-		"Repo"->b-a+1,
+		"Repo"->ToString[b-a+1]<>" of ???",
 		"Count"->count,
 		"Size"->size,
 		"Time"->Now-$now,
@@ -75,7 +76,41 @@ PhotosRange[a_Integer,b_Integer,OptionsPattern[]]:=Module[
 	|>]
 ];
 
-PhotosNewFindMax::ussage="找到某一图片分类的总数.";
+
+PhotosHotReshape::usage="内部函数, 用于数据清洗";
+PhotosHotReshape[doc_Association]:=<|
+	"uid"->doc["user","uid"],
+	"author"->doc["user","name"],
+	"did"->doc["item","doc_id"],
+	"title"->doc["item","title"],
+	"time"->FromUnixTime[doc["item","upload_time"]],
+	"imgs"->("img_src"/.doc["item","pictures"]),
+	"size"->If[
+		KeyExistsQ[First@doc["item","pictures"],"img_size"],
+		Total["img_size"/.doc["item","pictures"]],
+		Missing]
+|>;
+Options[PhotosHot]={UpTo->500,RawData->False};
+PhotosHot[typenum_,OptionsPattern[]]:=Module[
+	{$now=Now,api,map,raw,data},
+	api=$PhotosAPI["Hot"][$PhotoCategoryMap[typenum]["Key"]];
+	map=Table[api[<|"p"->i|>],{i,0,Quotient[Min[OptionValue[UpTo]-1,500],20]}];
+	raw=Flatten[URLExecute[#,"RawJSON"]["data","items"]&/@map];
+	If[OptionValue[RawData],Return[raw]];
+	data=PhotosHotReshape/@raw;
+	BilibiliAlbumObject[<|
+		"Data"->data,
+		"Category"->"PhotosRange",
+		"Repo"->ToString[OptionValue[UpTo]]<>" of 500",
+		"Count"->Length@Flatten["imgs"/.data],
+		"Size"->Total@DeleteCases["size"/.data,Missing],
+		"Time"->Now-$now,
+		"Date"->$now
+	|>]
+]
+
+
+PhotosNewFindMax::usage="找到某一图片分类的总数.";
 SetAttributes[PhotosNewFindMax,Listable];
 Options[PhotosNewFindMax]={Max->RandomInteger[{20000,21000}],Count->True};
 PhotosNewFindMax[type_String,OptionsPattern[]]:=Module[

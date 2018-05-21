@@ -820,7 +820,7 @@ $LocPF0="21,23,29,31,34,40,42,44,52,58,64,70,76,82,88,94,
 
 (* ::Subsection::Closed:: *)
 (*Secret*)
-$Secrets::ussage="官方key注册通道已经关闭\r
+$Secrets::usage="官方key注册通道已经关闭\r
 	虽然可以用黑科技注入, 但是已经搞不到高权限的key了\r
 	所以只能用现有的开源方案来搞了, 这些key来自\r
 	https://github.com/search?q=bilibili+appkey&type=Code";

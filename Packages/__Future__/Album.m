@@ -18,7 +18,7 @@
 (* ::Section:: *)
 (*函数说明*)
 
-PhotosLeaderboard::ussage="h.bilibili.com 图片作品排行榜.";
+PhotosLeaderboard::usage="h.bilibili.com 图片作品排行榜.";
 (* ::Section:: *)
 (*程序包正体*)
 Begin["`Photos`"];
@@ -50,7 +50,7 @@ BilibiliAlbumIndex[]:=Module[
 
 (* ::Subsection::Closed:: *)
 (*PhotosLeaderboard*)
-PictureDataRebuild::ussage="内部函数, 用于数据清洗";
+PictureDataRebuild::usage="内部函数, 用于数据清洗";
 PictureDataRebuild[doc_Association]:=<|
 	"uid"->doc["user","uid"],
 	"author"->doc["user","name"],
