@@ -4,16 +4,17 @@ BilibiliAlbumIndex::ussage="";
 
 Begin["`Photo`"];
 $PhotoCategoryMap=<|
-	1-><|"Name"->"插画","Key"->"illustration","Url"->"https://h.bilibili.com/eden/draw_area#/illustration"|>,
-	2-><|"Name"->"漫画","Key"->"comic","Url"->"https://h.bilibili.com/eden/draw_area#/comic"|>,
-	3-><|"Name"->"其他画作","Key"->"draw","Url"->"https://h.bilibili.com/eden/draw_area#/other"|>,
-	4-><|"Name"->"全部画作","Key"->"alld","Url"->"https://h.bilibili.com/eden/draw_area#/all"|>,
-	5-><|"Name"->"Cosplay","Key"->"cos","Url"->"https://h.bilibili.com/eden/picture_area#/cos"|>,
-	6-><|"Name"->"其他摄影","Key"->"sifu","Url"->"https://h.bilibili.com/eden/picture_area#/sifu"|>,
-	7-><|"Name"->"全部摄影","Key"->"allp","Url"->"https://h.bilibili.com/eden/picture_area#/all"|>
+	1-><|"Name"->"插画","Alias"->"Illustration","Key"->"illustration","Url"->"https://h.bilibili.com/eden/draw_area#/illustration"|>,
+	2-><|"Name"->"漫画","Alias"->"Comic","Key"->"comic","Url"->"https://h.bilibili.com/eden/draw_area#/comic"|>,
+	3-><|"Name"->"其他画作","Alias"->"OtherDraw","Key"->"draw","Url"->"https://h.bilibili.com/eden/draw_area#/other"|>,
+	4-><|"Name"->"全部画作","Alias"->"AllDraw","Key"->"alld","Url"->"https://h.bilibili.com/eden/draw_area#/all"|>,
+	5-><|"Name"->"Cosplay","Alias"->"Cosplay","Key"->"cos","Url"->"https://h.bilibili.com/eden/picture_area#/cos"|>,
+	6-><|"Name"->"其他摄影","Alias"->"OtherPhoto","Key"->"sifu","Url"->"https://h.bilibili.com/eden/picture_area#/sifu"|>,
+	7-><|"Name"->"全部摄影","Alias"->"AllPhoto","Key"->"allp","Url"->"https://h.bilibili.com/eden/picture_area#/all"|>
 
 |>;
 $PhotosAPI=<|
+	"Range"->StringTemplate["https://api.vc.bilibili.com/link_draw/v1/doc/detail?doc_id=`id`"],
 	"Home"->"https://api.vc.bilibili.com/link_draw/v2/Doc/home",
 	"New"->Function[Switch[#,
 		"illustration",StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Doc/list?category=illustration&type=new&page_num=`p`&page_size=20"],
@@ -35,25 +36,45 @@ $PhotosAPI=<|
 	]]
 |>;
 
-BilibiliAlbumIndex[]:=Module[
-	{$now=Now,get,bg,imgs,data},
-	get=URLExecute[$PhotosAPI["Home"],"RawJSON"]["data"];
-	bg=<|"Name"->ToString[Now//UnixTime]<>"_0","URL"->get["bg_img"]|>;
-	imgs=MapIndexed[<|"Name"->StringJoin[ToString/@{UnixTime@Now,_,First@#2}],"URL"->#1|>&,"img_src"/.get["items"]];
-	data=<|
-		"DataType"->"AlbumIndexPage",
-		"ImageList"->Prepend[imgs,bg]
-	|>;
-	BilibiliAlbumObject[<|
-		"Data"->data,
-		"Category"->"Album Index Page",
-		"Repo"->Length[get["items"]]+1,
-		"Count"->Length[get["items"]]+1,
-		"Size"->Total@Select["img_size"/.get["items"],IntegerQ],
+PhotosRangeReshape::ussage="PhotosRange的数据清洗.";
+PhotosRangeReshape[doc_Association]:=<|
+	"uid"->doc["user","uid"],
+	"author"->doc["user","name"],
+	"did"->doc["item","doc_id"],
+	"title"->If[doc["item","title"]!="",
+		doc["item","title"],
+		"无名_"<>ToString[doc["item","doc_id"]]
+	],
+	"time"->doc["item","upload_time"],
+	"imgs"->("img_src"/.doc["item","pictures"]),
+	"size"->If[KeyExistsQ[First@doc["item","pictures"],"img_size"],
+		Total["img_size"/.doc["item","pictures"]],
+		Missing
+	]
+|>;
+Options[PhotosRange]={RawData->False};
+PhotosRange[n_Integer,ops:OptionsPattern[]]:=PhotosRange[1,n,ops];
+PhotosRange[a_Integer,b_Integer,OptionsPattern[]]:=Module[
+	{$now=Now,urls,raw,data,count,size},
+	urls=Table[$PhotosAPI["Range"][<|"id"->i|>],{i,a,b}];
+	raw=#["data"]&/@Select[ParallelMap[URLExecute[#,"RawJSON"]&,urls],#["code"]==0&];
+	If[OptionValue[RawData],Return[raw]];
+	data=PhotosRangeReshape/@raw;
+	If[data=={},
+		count=0;size=0,
+		count=Length@Flatten["imgs"/.data];
+		size=Total@DeleteCases["size"/.data,Missing]
+	];
+	BilibiliAlbumObject[<|"Data"->data,
+		"Category"->"PhotosRange",
+		"Repo"->b-a+1,
+		"Count"->count,
+		"Size"->size,
 		"Time"->Now-$now,
 		"Date"->$now
 	|>]
 ];
+
 PhotosNewFindMax::ussage="找到某一图片分类的总数.";
 SetAttributes[PhotosNewFindMax,Listable];
 Options[PhotosNewFindMax]={Max->RandomInteger[{20000,21000}],Count->True};
