@@ -1,6 +1,6 @@
 
 
-BilibiliAlbumIndex::usage="";
+
 PhotosRange::usage="";
 PhotosHot::usage="";
 Begin["`Photo`"];
@@ -102,14 +102,14 @@ PhotosHot[typenum_,OptionsPattern[]]:=Module[
 	data=PhotosHotReshape/@raw;
 	BilibiliAlbumObject[<|
 		"Data"->data,
-		"Category"->"PhotosRange",
+		"Category"->"PhotosHot",
 		"Repo"->ToString[OptionValue[UpTo]]<>" of 500",
 		"Count"->Length@Flatten["imgs"/.data],
 		"Size"->Total@DeleteCases["size"/.data,Missing],
 		"Time"->Now-$now,
 		"Date"->$now
 	|>]
-]
+];
 
 
 PhotosNewFindMax::usage="找到某一图片分类的总数.";
@@ -123,7 +123,43 @@ PhotosNewFindMax[type_String,OptionsPattern[]]:=Module[
 	While[max-min>1,If[try[Floor[(min+max)/2]]["total_count"]>0,min=Floor[(min+max)/2],max=Floor[(min+max)/2]]];
 	If[OptionValue[Count],Return[Length[try[min]["items"]]+20(min-1)],min]
 ];
+PhotosNewReshape::usage="内部函数, 用于数据清洗";
+PhotosNewReshape[doc_Association]:=<|
+	"uid"->doc["user","uid"],
+	"author"->doc["user","name"],
+	"did"->doc["item","doc_id"],
+	"title"->doc["item","title"],
+	"time"->FromUnixTime[doc["item","upload_time"]],
+	"imgs"->("img_src"/.doc["item","pictures"]),
+	"size"->If[
+		KeyExistsQ[First@doc["item","pictures"],"img_size"],
+		Total["img_size"/.doc["item","pictures"]],
+		Missing]
+|>;
 
+
+Options[PhotosNew]={UpTo->1000,RawData->False,Count->False};
+PhotosNew[typenum_,OptionsPattern[]]:=Module[
+	{$now=Now,api,all,map,raw,data},
+	api=$PhotosAPI["New"][$PhotoCategoryMap[typenum]["Key"]];
+	If[OptionValue["Count"],
+		all=ToString[PhotosNewFindMax[$PhotoCategoryMap[typenum]["Key"]]],
+		all="???"
+	];
+	map=Table[api[<|"p"->i|>],{i,0,Quotient[OptionValue[UpTo]-1,20]}];
+	raw=Flatten[URLExecute[#,"RawJSON"]["data","items"]&/@map];
+	If[OptionValue[RawData],Return[raw]];
+	data=PhotosNewReshape/@raw;
+	BilibiliAlbumObject[<|
+		"Data"->data,
+		"Category"->"PhotosRange",
+		"Repo"->ToString[OptionValue[UpTo]]<>" of "<>all,
+		"Count"->Length@Flatten["imgs"/.data],
+		"Size"->Total@DeleteCases["size"/.data,Missing],
+		"Time"->Now-$now,
+		"Date"->$now
+	|>]
+];
 
 
 

@@ -1,29 +1,8 @@
-(* ::Package:: *)
-(* ::Title:: *)
-(*BilibiliColumns*)
-(* ::Subchapter:: *)
-(*程序包介绍*)
-(* ::Text:: *)
-(*Mathematica Package*)
-(*Created by Mathematica Plugin for IntelliJ IDEA*)
-(**)
-(* ::Text:: *)
-(*Creation Date: 2018-03-12*)
-(*Copyright: Mozilla Public License Version 2.0*)
-(* ::Program:: *)
-(*1.软件产品再发布时包含一份原始许可声明和版权声明。*)
-(*2.提供快速的专利授权。*)
-(*3.不得使用其原始商标。*)
-(*4.如果修改了源代码，包含一份代码修改说明。*)
-(* ::Section:: *)
-(*函数说明*)
 
 PhotosLeaderboard::usage="h.bilibili.com 图片作品排行榜.";
-(* ::Section:: *)
-(*程序包正体*)
-Begin["`Photos`"];
 
 
+BilibiliAlbumIndex::usage="";
 BilibiliAlbumIndex[]:=Module[
 	{$now=Now,get,bg,imgs,data},
 	get=URLExecute[$PhotosAPI["Home"],"RawJSON"]["data"];
@@ -90,6 +69,16 @@ PhotosLeaderboard[cat_]:=Module[
 		"Date"->$now
 	|>]
 ];
+
+
+PicturesPack2MD[docs_List]:=StringJoin[PicturesPack2MD/@docs];
+PicturePack2MD[ass_]:=Block[
+	{text = PicturesPack2MD[Lookup[ass, "Data"]], name, file},
+	name = DateString[Lookup[ass, "Date"], {"Year", "-", "Month", "-", "Day", "-"}] <>ToString[Hash@text] <> ".md";
+	file = FileNameJoin[{$BilibiliLinkData, "Markdown", name}];
+	If[FileExistsQ[file],Message[BilibiliExport::NoFile, name];Return[file],CreateFile[file]];
+	Export[file, text, "Text"]
+];
 PicturesPack2MD[doc_Association]:=StringJoin@Riffle[Join[
 	{
 		"### 作者: "<>doc["author"],
@@ -101,21 +90,4 @@ PicturesPack2MD[doc_Association]:=StringJoin@Riffle[Join[
 	"![]("<>#<>")"&/@doc["imgs"],
 	{"\r---\r\r"}
 ],"\r"];
-PicturesPack2MD[docs_List]:=StringJoin[PicturesPack2MD/@docs];
 
-
-
-PicturePack2MD[ass_]:=Block[
-	{text = PicturesPack2MD[Lookup[ass, "Data"]], name, file},
-	name = DateString[Lookup[ass, "Date"], {"Year", "-", "Month", "-", "Day", "-"}] <>ToString[Hash@text] <> ".md";
-	file = FileNameJoin[{$BilibiliLinkData, "Markdown", name}];
-	If[FileExistsQ[file],Message[BilibiliExport::NoFile, name];Return[file],CreateFile[file]];
-	Export[file, text, "Text"]
-];
-
-
-SetAttributes[
-	{},
-	{Protected,ReadProtected}
-];
-End[];
