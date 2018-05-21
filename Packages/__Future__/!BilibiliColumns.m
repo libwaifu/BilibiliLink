@@ -9,7 +9,8 @@ Begin["`Columns`"];
 (*下载并转化专栏*)
 Options[BilibiliArticle]={Debug->False};
 BilibiliArticle[cv_,OptionsPattern[]]:=Block[
-	{xml,pre,body,
+	{
+		xml,pre,body,
 		raw=Import["https://www.bilibili.com/read/cv"<>ToString@cv,{"HTML","XMLObject"}]
 	},
 	xml=Flatten@Cases[raw,XMLElement["div",{"class"->"article-holder"},t___]:>t,Infinity,1];
