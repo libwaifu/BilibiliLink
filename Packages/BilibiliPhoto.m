@@ -54,10 +54,11 @@ PhotosRangeReshape[doc_Association]:=<|
 	]
 |>;
 Options[PhotosRange]={RawData->False};
-PhotosRange[n_Integer,ops:OptionsPattern[]]:=PhotosRange[1,n,ops];
-PhotosRange[a_Integer,b_Integer,OptionsPattern[]]:=Module[
+PhotosRange[n_Integer,ops:OptionsPattern[]]:=PhotosRange[Range[n],ops];
+PhotosRange[a_Integer,b_Integer,ops:OptionsPattern[]]:=PhotosRange[Range[a,b],ops];
+PhotosRange[input_List,OptionsPattern[]]:=Module[
 	{$now=Now,urls,raw,data,count,size},
-	urls=Table[$PhotosAPI["Range"][<|"id"->i|>],{i,a,b}];
+	urls=Table[$PhotosAPI["Range"][<|"id"->i|>],{i,input}];
 	raw=#["data"]&/@Select[ParallelMap[URLExecute[#,"RawJSON"]&,urls],#["code"]==0&];
 	If[OptionValue[RawData],Return[raw]];
 	data=PhotosRangeReshape/@raw;
@@ -68,7 +69,7 @@ PhotosRange[a_Integer,b_Integer,OptionsPattern[]]:=Module[
 	];
 	BilibiliAlbumObject[<|"Data"->data,
 		"Category"->"PhotosRange",
-		"Repo"->ToString[b-a+1]<>" of ???",
+		"Repo"->ToString[Length@input]<>" of ???",
 		"Count"->count,
 		"Size"->size,
 		"Time"->Now-$now,
@@ -88,7 +89,8 @@ PhotosHotReshape[doc_Association]:=<|
 	"size"->If[
 		KeyExistsQ[First@doc["item","pictures"],"img_size"],
 		Total["img_size"/.doc["item","pictures"]],
-		Missing]
+		Missing
+	]
 |>;
 Options[PhotosHot]={UpTo->500,RawData->False};
 PhotosHot[typenum_,OptionsPattern[]]:=Module[
