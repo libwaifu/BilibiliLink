@@ -2,8 +2,6 @@
 
 
 
-$APIs::ussage="";
-$RawAPIs::ussage="内部变量, Bilibili提供的API";
 $BilibiliLinkUA::ussage="";
 Begin["`APIs`"];
 

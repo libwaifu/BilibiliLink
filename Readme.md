@@ -5,8 +5,8 @@
 [![Release Vision](https://img.shields.io/badge/release-v0.2.0-ff69b4.svg)](https://github.com/GalAster/BilibiliLink/releases)
 [![Repo Size](https://img.shields.io/github/repo-size/GalAster/BilibiliLink.svg)](https://github.com/GalAster/BilibiliLink.git)
 
-## Introduce
 ![](https://i.loli.net/2018/05/20/5b0170b1f1494.png)
+## Introduce
 BilibiliLink 提供了一系列获取B站数据的方法, 计划中的内容有, 文章下载, 文章评论下载, 画师画作下载, 评论下载, cosplay下载, 视频跟踪等等.
 
 有什么想要的功能也可以在 github issue 中提出哦!
