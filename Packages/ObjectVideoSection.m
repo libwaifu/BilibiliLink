@@ -1,6 +1,6 @@
-BilibiliVideoSectionObject::ussage="";
+BilibiliVideoSectionObject::usage="";
 Begin["`Object`"];
-BilibiliVideoSectionObjectQ::ussage="BilibiliVideoSectionObject 合法性检测";
+BilibiliVideoSectionObjectQ::usage="BilibiliVideoSectionObject 合法性检测";
 BilibiliVideoSectionObjectQ[asc_?AssociationQ]:=AllTrue[{"Me","Parent","Count","Date"},KeyExistsQ[asc,#]&];
 BilibiliVideoSectionObjectQ[_]=False;
 Format[BilibiliVideoSectionObject[___],OutputForm]:="BilibiliVideoSectionObject[<>]";

@@ -1,7 +1,7 @@
-BilibiliAlbumObject::ussage="内部函数, 图片地址对象.";
+BilibiliAlbumObject::usage="内部函数, 图片地址对象.";
 Begin["`Object`"];
 (*BilibiliAlbumObject*)
-BilibiliAlbumObjectQ::ussage="BilibiliAlbumObject 合法性检测";
+BilibiliAlbumObjectQ::usage="BilibiliAlbumObject 合法性检测";
 BilibiliAlbumObjectQ[asc_?AssociationQ]:=AllTrue[{"Count","Date"},KeyExistsQ[asc,#]&];
 BilibiliAlbumObjectQ[_]:=False;
 

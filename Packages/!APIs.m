@@ -2,7 +2,7 @@
 
 
 
-$BilibiliLinkUA::ussage="";
+$BilibiliLinkUA::usage="";
 Begin["`APIs`"];
 
 

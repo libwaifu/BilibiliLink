@@ -1,7 +1,7 @@
 
 
-BilibiliAlbumIndex::ussage="";
-
+BilibiliAlbumIndex::usage="";
+PhotosRange::usage="";
 Begin["`Photo`"];
 $PhotoCategoryMap=<|
 	1-><|"Name"->"插画","Alias"->"Illustration","Key"->"illustration","Url"->"https://h.bilibili.com/eden/draw_area#/illustration"|>,

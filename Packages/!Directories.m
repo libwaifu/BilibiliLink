@@ -1,6 +1,6 @@
-$BilibiliLinkDirectory::ussage="BilibiliLink 的安装路径.";
-$BilibiliLinkIcons::ussage="BilibiliLink 的图标映射.";
-$BilibiliLinkData::ussage="BilibiliLink 的数据存放位置.";
+$BilibiliLinkDirectory::usage="BilibiliLink 的安装路径.";
+$BilibiliLinkIcons::usage="BilibiliLink 的图标映射.";
+$BilibiliLinkData::usage="BilibiliLink 的数据存放位置.";
 Begin["`Directories`"];
 
 
@@ -9,7 +9,7 @@ $BilibiliLinkData=FileNameJoin[{$UserBaseDirectory, "ApplicationData", "Bilibili
 
 
 
-$BLID::ussage="BilibiliLinkIconsDirectory,BilibiliLink 图片图标的存放路径.";
+$BLID::usage="BilibiliLinkIconsDirectory,BilibiliLink 图片图标的存放路径.";
 $BLID=FileNameJoin[{$BilibiliLinkDirectory,"Resources","ico"}];
 $BilibiliLinkIcons[name_]:=$BilibiliLinkIcons[name]=Switch[name,
 	"BilibiliAlbumObject",

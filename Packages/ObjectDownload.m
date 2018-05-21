@@ -1,7 +1,7 @@
-BilibiliDownload::ussage="";
-BilibiliDownloadObject::ussage="";
+BilibiliDownload::usage="";
+BilibiliDownloadObject::usage="";
 Begin["`Object`"];
-BilibiliDownloadObjectQ::ussage="BilibiliDownloadObject 合法性检测";
+BilibiliDownloadObjectQ::usage="BilibiliDownloadObject 合法性检测";
 BilibiliDownloadObjectQ[asc_?AssociationQ]:=AllTrue[{"Path","Data"},KeyExistsQ[asc,#]&];
 BilibiliDownloadObjectQ[_]:=False;
 Format[BilibiliDownloadObject[___],OutputForm]:="BilibiliDownloadObject[<>]";

@@ -1,5 +1,5 @@
-VideoSectionQ::ussage="";
-VideoSection::ussage="";
+VideoSectionQ::usage="";
+VideoSection::usage="";
 Begin["`Video`"];
 VideoSectionQ=MemberQ[$APIs["RidList"]//Keys//Rest,#]&;
 VideoSection[id_Integer]:=Module[
