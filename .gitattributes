@@ -2,8 +2,8 @@
 # 屏蔽文档与 build 文件统计
 Documentation/* linguist-documentation
 Packages/*.m linguist-generated=true
-# make things fun lol
-*.md linguist-language=go
-*.wl linguist-language=perl
-*.nb linguist-language=ruby
+# make things fun, lol
+*.wl linguist-language=bash
+Config/*.m linguist-language=perl
+BilibiliLinkLoader.m linguist-language=ruby
 Packages/__Future__/*.m linguist-language=mercury

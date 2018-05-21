@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/GalAster/BilibiliLink.svg?branch=master)](https://travis-ci.org/GalAster/BilibiliLink)
 [![Mathematica](https://img.shields.io/badge/Mathematica-%3E%3D11.3-brightgreen.svg)](https://www.wolfram.com/mathematica/)
-[![Release Vision](https://img.shields.io/badge/release-v0.2.0-ff69b4.svg)](https://github.com/GalAster/BilibiliLink/releases)
+[![Release Vision](https://img.shields.io/badge/release-v0.3.0-ff69b4.svg)](https://github.com/GalAster/BilibiliLink/releases)
 [![Repo Size](https://img.shields.io/github/repo-size/GalAster/BilibiliLink.svg)](https://github.com/GalAster/BilibiliLink.git)
 
 ![](https://i.loli.net/2018/05/20/5b0170b1f1494.png)
@@ -32,11 +32,11 @@ If[$CharacterEncoding=!="UTF-8",
 	Close[st];
 ];
 ```
-### 自动安装
+### Automatic Installation
 
 版本号达到 v0.6.0 以后我会提交到部署服务器.
 
-### 手动安装
+### Manual Installation
 
 打开目录:
 
