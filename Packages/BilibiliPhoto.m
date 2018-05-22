@@ -87,6 +87,32 @@ PhotosRange[input_List,OptionsPattern[]]:=Module[
 	|>]
 ];
 
+PhotosIndex::usage="";
+PhotosIndex[]:=Module[
+	{$now=Now,get,bg,size,imgs},
+	get=URLExecute[$PhotosAPI["Home"],"RawJSON"]["data"];
+	bg=<|"Name"->ToString[Now//UnixTime]<>"_0","URL"->get["bg_img"]|>;
+	size=Total@DeleteCases["img_size"/.get["items"],"img_size"];
+	imgs=Prepend["img_src"/.get["items"],bg];
+	BilibiliAlbumObject[<|
+		"Data"->{<|
+			"uid"->12076317,
+			"author"->"BilibiliHomePage",
+			"did"->0,
+			"title"->"HomePage "<>DateString[$now],
+			"time"->$now,
+			"imgs"->imgs,
+			"size"->size
+		|>},
+		"Category"->"PhotosHomePage",
+		"Repo"->"0 of 0",
+		"Count"->Length@imgs,
+		"Size"->size,
+		"Time"->Now-$now,
+		"Date"->$now
+	|>]
+];
+
 
 PhotosHotReshape::usage="内部函数, 用于数据清洗";
 PhotosHotReshape[doc_Association]:=<|
