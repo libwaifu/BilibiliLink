@@ -70,24 +70,25 @@ PhotosLeaderboard[cat_]:=Module[
 	|>]
 ];
 
+AlbumDownload[raw_]:=Switch[
+	raw["Data","DataType"],
+	"AlbumIndexPage",AlbumIndexPageDownload[raw]
 
-PicturesPack2MD[docs_List]:=StringJoin[PicturesPack2MD/@docs];
-PicturePack2MD[ass_]:=Block[
-	{text = PicturesPack2MD[Lookup[ass, "Data"]], name, file},
-	name = DateString[Lookup[ass, "Date"], {"Year", "-", "Month", "-", "Day", "-"}] <>ToString[Hash@text] <> ".md";
-	file = FileNameJoin[{$BilibiliLinkData, "Markdown", name}];
-	If[FileExistsQ[file],Message[BilibiliExport::NoFile, name];Return[file],CreateFile[file]];
-	Export[file, text, "Text"]
+
+
 ];
-PicturesPack2MD[doc_Association]:=StringJoin@Riffle[Join[
-	{
-		"### 作者: "<>doc["author"],
-		"### 主页: "<>"https://space.bilibili.com/"<>ToString[doc["uid"]]<>"/#/album",
-		"### 标题: "<>doc["title"],
-		"### 日期: "<>DateString@doc["time"],
-		"### 链接: "<>"https://h.bilibili.com/"<>ToString[doc["did"]]
-	},
-	"![]("<>#<>")"&/@doc["imgs"],
-	{"\r---\r\r"}
-],"\r"];
 
+
+Options[AlbumIndexPageDownload]={ImageSize->Full,Defer->False};
+AlbumIndexPageDownload[ass_,OptionsPattern[]]:=Block[
+	{size=OptionValue[ImageSize],obj,resize},
+	resize=<|"Name"->#["Name"]<>ToString[size],"URL"->#["URL"]<>ImageSizeConvert[size]|>&;
+	obj=BilibiliDownloadObject[<|
+		"Date"->ass["Date"],
+		"Category"->ass["Data","DataType"],
+		"Data"->(resize/@ass["Data","ImageList"]),
+		"Path"->FileNameJoin[{$BilibiliLinkData,"Image","Album","Index"}],
+		"Size"->Quantity[ass["Size"]/1024.,"Megabytes"]
+	|>];
+	If[OptionValue[Defer],Return[obj],obj["Download"]]
+];

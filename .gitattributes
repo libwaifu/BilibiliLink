@@ -1,7 +1,6 @@
 * text=auto
 # 屏蔽文档与 build 文件统计
 Documentation/* linguist-documentation
-Packages/*.m linguist-generated=true
 # make things fun, lol
 *.wl linguist-language=bash
 Config/*.m linguist-language=perl

@@ -3,5 +3,3 @@
 .idea/*
 
 *.nb
-!Kernel/*.nb
-!Resources/test/*.nb

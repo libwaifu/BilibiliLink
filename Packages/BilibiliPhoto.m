@@ -3,15 +3,16 @@
 
 PhotosRange::usage="";
 PhotosHot::usage="";
+PhotosNew::usage="";
 Begin["`Photo`"];
 $PhotoKeyMap=<|
 	1-><|"Name"->"插画","Alias"->"Illustration","Key"->"illustration","Url"->"https://h.bilibili.com/eden/draw_area#/illustration"|>,
 	2-><|"Name"->"漫画","Alias"->"Comic","Key"->"comic","Url"->"https://h.bilibili.com/eden/draw_area#/comic"|>,
 	3-><|"Name"->"其他画作","Alias"->"OtherDraw","Key"->"draw","Url"->"https://h.bilibili.com/eden/draw_area#/other"|>,
-	4-><|"Name"->"全部画作","Alias"->"AllDraw","Key"->"alld","Url"->"https://h.bilibili.com/eden/draw_area#/all"|>,
+	4-><|"Name"->"全部画作","Alias"->"DrawAll","Key"->"alld","Url"->"https://h.bilibili.com/eden/draw_area#/all"|>,
 	5-><|"Name"->"Cosplay","Alias"->"Cosplay","Key"->"cos","Url"->"https://h.bilibili.com/eden/picture_area#/cos"|>,
 	6-><|"Name"->"其他摄影","Alias"->"OtherPhoto","Key"->"sifu","Url"->"https://h.bilibili.com/eden/picture_area#/sifu"|>,
-	7-><|"Name"->"全部摄影","Alias"->"AllPhoto","Key"->"allp","Url"->"https://h.bilibili.com/eden/picture_area#/all"|>,
+	7-><|"Name"->"全部摄影","Alias"->"PhotoAll","Key"->"allp","Url"->"https://h.bilibili.com/eden/picture_area#/all"|>,
 	8-><|"Name"->"日榜","Alias"->"AllPhoto","Key"->"allp","Url"->"https://h.bilibili.com/eden/picture_area#/all"|>,
 	9-><|"Name"->"月榜","Alias"->"AllPhoto","Key"->"allp","Url"->"https://h.bilibili.com/eden/picture_area#/all"|>,
 	10-><|"Name"->"月榜","Alias"->"AllPhoto","Key"->"allp","Url"->"https://h.bilibili.com/eden/picture_area#/all"|>
@@ -94,7 +95,7 @@ PhotosHotReshape[doc_Association]:=<|
 		Missing
 	]
 |>;
-Options[PhotosHot]={UpTo->500,RawData->False};
+Options[PhotosHot]={UpTo->100,RawData->False};
 PhotosHot[typenum_,OptionsPattern[]]:=Module[
 	{$now=Now,api,map,raw,data},
 	api=$PhotosAPI["Hot"][$PhotoKeyMap[typenum]["Key"]];
@@ -104,7 +105,7 @@ PhotosHot[typenum_,OptionsPattern[]]:=Module[
 	data=PhotosHotReshape/@raw;
 	BilibiliAlbumObject[<|
 		"Data"->data,
-		"Category"->"PhotosHot "<>$PhotoKeyMap[typenum]["Alias"],
+		"Category"->"PhotosHot"<>$PhotoKeyMap[typenum]["Alias"],
 		"Repo"->ToString[OptionValue[UpTo]]<>" of 500",
 		"Count"->Length@Flatten["imgs"/.data],
 		"Size"->Total@DeleteCases["size"/.data,Missing],
@@ -140,7 +141,7 @@ PhotosNewReshape[doc_Association]:=<|
 |>;
 
 
-Options[PhotosNew]={UpTo->1000,RawData->False,Count->False};
+Options[PhotosNew]={UpTo->100,RawData->False,Count->False};
 PhotosNew[typenum_,OptionsPattern[]]:=Module[
 	{$now=Now,api,all,map,raw,data},
 	api=$PhotosAPI["New"][$PhotoKeyMap[typenum]["Key"]];
@@ -154,7 +155,7 @@ PhotosNew[typenum_,OptionsPattern[]]:=Module[
 	data=PhotosNewReshape/@raw;
 	BilibiliAlbumObject[<|
 		"Data"->data,
-		"Category"->"PhotosNew "<>$PhotoKeyMap[typenum]["Alias"],
+		"Category"->"PhotosNew"<>$PhotoKeyMap[typenum]["Alias"],
 		"Repo"->ToString[OptionValue[UpTo]]<>" of "<>all,
 		"Count"->Length@Flatten["imgs"/.data],
 		"Size"->Total@DeleteCases["size"/.data,Missing],
