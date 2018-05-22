@@ -23,7 +23,8 @@ BilibiliAlbumObject/:MakeBoxes[obj:BilibiliAlbumObject[asc_?BilibiliAlbumObjectQ
 		"BilibiliLink",obj,
 		$BilibiliLinkIcons["BilibiliAlbumObject"],
 		above,below,form,
-		"Interpretable"->Automatic]
+		"Interpretable"->Automatic
+	]
 ];
 (*Aid Functions*)
 SizeConvert[x_Integer]:=N@Piecewise[{
@@ -48,20 +49,22 @@ ImageSizeConvert[size_]:=Switch[
 (*Interface*)
 BilibiliAlbumObject[ass_][func_String]:=Switch[
 	func,
+	"d",BilibiliAlbumObject[ass]["Data"],
 	"Data",Lookup[ass,"Data"],
+	"i",BilibiliAlbumObject[ass]["Image"],
 	"Image",Flatten["imgs"/.Lookup[ass,"Data"]],
+	"m",BilibiliAlbumObject[ass]["Markdown"],
 	"Markdown",PicturesPackMarkdownExport[ass],
-	"do",AlbumDownload[ass],
+	"do",BilibiliAlbumObject[ass]["Download"],
 	"Download",AlbumDownload[ass],
-	_,BilibiliAlbumObject[]
+	_,BilibiliAlbumObjectHelp[]
 ];
 BilibiliAlbumObject[ass_][func_String,{para__}]:=Switch[
 	func,
-	"do",AlbumDownload[ass,para],
 	"Download",AlbumDownload[ass,para],
-	_,BilibiliAlbumObject[]
+	_,BilibiliAlbumObjectHelp[]
 ];
-BilibiliAlbumObject[ass_][___]:=BilibiliAlbumObject[];
+BilibiliAlbumObject[ass_][___]:=BilibiliAlbumObjectHelp[];
 
 
 (*Method*)
@@ -72,9 +75,8 @@ PicturesPackMarkdownExport[ass_]:=Block[
 	If[FileExistsQ[file],Message[BilibiliExport::NoFile, name];Return[file],CreateFile[file]];
 	Export[file, text, "Text"]
 ];
-
+PicturesPack2MD::usage="将Album对象中的数据导出为Markdown格式.";
 PicturesPack2MD[docs_List]:=StringJoin[PicturesPack2MD/@docs];
-
 PicturesPack2MD[doc_Association]:=StringJoin@Riffle[Join[
 	{
 		"### 作者: "<>doc["author"],

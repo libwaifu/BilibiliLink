@@ -18,8 +18,12 @@ $PhotoKeyMap=<|
 	10-><|"Name"->"月榜","Alias"->"AllPhoto","Key"->"allp","Url"->"https://h.bilibili.com/eden/picture_area#/all"|>
 |>;
 $PhotosAPI=<|
-	"Range"->StringTemplate["https://api.vc.bilibili.com/link_draw/v1/doc/detail?doc_id=`id`"],
 	"Home"->"https://api.vc.bilibili.com/link_draw/v2/Doc/home",
+	"Range"->StringTemplate["https://api.vc.bilibili.com/link_draw/v1/doc/detail?doc_id=`id`"],
+	"Detail"->StringTemplate["https://api.vc.bilibili.com/link_draw/v1/doc/detail?doc_id=`id`"],
+	"Author"->StringTemplate["https://api.vc.bilibili.com/link_draw/v1/doc/doc_list?uid=`id`&page_num=`page`&page_size=100"],
+	"AuthorCount"->StringTemplate["https://api.vc.bilibili.com/link_draw/v1/doc/upload_count?uid=`id`"],
+	"AuthorDetail"->StringTemplate["https://api.vc.bilibili.com/user_ex/v1/user/detail?user[]=info&user[]=level&room[]=live_status&room[]=room_link&feed[]=fans_count&feed[]=feed_count&feed[]=is_followed&uid=`id`"],
 	"New"->Function[Switch[#,
 		"illustration",StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Doc/list?category=illustration&type=new&page_num=`p`&page_size=20"],
 		"comic",StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Doc/list?category=comic&type=new&page_num=`p`&page_size=20"],
@@ -39,6 +43,8 @@ $PhotosAPI=<|
 		"allp",StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Photo/list?category=all&type=hot&page_num=`p`&page_size=20"]
 	]]
 |>;
+
+
 
 PhotosRangeReshape::usage="PhotosRange的数据清洗.";
 PhotosRangeReshape[doc_Association]:=<|
@@ -70,7 +76,8 @@ PhotosRange[input_List,OptionsPattern[]]:=Module[
 		count=Length@Flatten["imgs"/.data];
 		size=Total@DeleteCases["size"/.data,Missing]
 	];
-	BilibiliAlbumObject[<|"Data"->data,
+	BilibiliAlbumObject[<|
+		"Data"->data,
 		"Category"->"PhotosRange",
 		"Repo"->ToString[Length@input]<>" of ???",
 		"Count"->count,
@@ -141,15 +148,19 @@ PhotosNewReshape[doc_Association]:=<|
 |>;
 
 
-Options[PhotosNew]={UpTo->100,RawData->False,Count->False};
+Options[PhotosNew]={UpTo->100,RawData->False,Count->False,All->False};
 PhotosNew[typenum_,OptionsPattern[]]:=Module[
 	{$now=Now,api,all,map,raw,data},
 	api=$PhotosAPI["New"][$PhotoKeyMap[typenum]["Key"]];
-	If[OptionValue["Count"],
+	If[OptionValue[Count],
 		all=ToString[PhotosNewFindMax[$PhotoKeyMap[typenum]["Key"]]],
 		all="???"
 	];
-	map=Table[api[<|"p"->i|>],{i,0,Quotient[OptionValue[UpTo]-1,20]}];
+	If[OptionValue[All],
+		all=ToString[PhotosNewFindMax[$PhotoKeyMap[typenum]["Key"]]];
+		map=Table[api[<|"p"->i|>],{i,0,Quotient[all-1,20]}],
+		map=Table[api[<|"p"->i|>],{i,0,Quotient[OptionValue[UpTo]-1,20]}]
+	];
 	raw=Flatten[URLExecute[#,"RawJSON"]["data","items"]&/@map];
 	If[OptionValue[RawData],Return[raw]];
 	data=PhotosNewReshape/@raw;
@@ -164,6 +175,36 @@ PhotosNew[typenum_,OptionsPattern[]]:=Module[
 	|>]
 ];
 
+PhotosAuthorReshape::usage="内部函数, 用于数据清洗";
+PhotosAuthorReshape[doc_Association]:=<|
+	"uid"->doc["poster_uid"],
+	"author"->doc["description"],
+	"did"->doc["doc_id"],
+	"title"->If[doc["title"]=="",doc["doc_id"],doc["title"]],
+	"time"->FromUnixTime[doc["ctime"]],
+	"imgs"->("img_src"/.doc["pictures"]),
+	"size"->If[
+		KeyExistsQ[First@doc["pictures"],"img_size"],
+		Total["img_size"/.doc["pictures"]],
+		Missing
+	]
+|>;
+PhotosAuthor[id_]:=Module[
+	{$now=Now,count,api,raw,data},
+	count=URLExecute[$PhotosAPI["AuthorCount"][<|"id"->id|>],"RawJSON"]["data"];
+	api=URLExecute[$PhotosAPI["Author"][<|"id"->id,"page"->#|>],"RawJSON"]["data","items"]&;
+	raw=Flatten@Table[api[i],{i,0,Quotient[count["all_count"]-1,100]}];
+	data=PhotosAuthorReshape/@raw;
+	BilibiliAlbumObject[<|
+		"Data"->data,
+		"Category"->"PhotosAuthor "<>ToString[id],
+		"Repo"->ToString[raw//Length]<>" of "<>ToString[count["all_count"]],
+		"Count"->Length@Flatten["imgs"/.data],
+		"Size"->Total@DeleteCases["size"/.data,Missing],
+		"Time"->Now-$now,
+		"Date"->$now
+	|>]
+];
 
 
 End[]
