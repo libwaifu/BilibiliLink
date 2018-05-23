@@ -1,9 +1,10 @@
 
 
-
+PhotosIndex::usage="";
 PhotosRange::usage="";
 PhotosHot::usage="";
 PhotosNew::usage="";
+
 Begin["`Photo`"];
 $PhotoKeyMap=<|
 	1-><|"Name"->"插画","Alias"->"Illustration","Key"->"illustration","Url"->"https://h.bilibili.com/eden/draw_area#/illustration"|>,
@@ -13,9 +14,9 @@ $PhotoKeyMap=<|
 	5-><|"Name"->"Cosplay","Alias"->"Cosplay","Key"->"cos","Url"->"https://h.bilibili.com/eden/picture_area#/cos"|>,
 	6-><|"Name"->"其他摄影","Alias"->"OtherPhoto","Key"->"sifu","Url"->"https://h.bilibili.com/eden/picture_area#/sifu"|>,
 	7-><|"Name"->"全部摄影","Alias"->"PhotoAll","Key"->"allp","Url"->"https://h.bilibili.com/eden/picture_area#/all"|>,
-	8-><|"Name"->"日榜","Alias"->"AllPhoto","Key"->"allp","Url"->"https://h.bilibili.com/eden/picture_area#/all"|>,
-	9-><|"Name"->"月榜","Alias"->"AllPhoto","Key"->"allp","Url"->"https://h.bilibili.com/eden/picture_area#/all"|>,
-	10-><|"Name"->"月榜","Alias"->"AllPhoto","Key"->"allp","Url"->"https://h.bilibili.com/eden/picture_area#/all"|>
+	8-><|"Name"->"日榜/新人榜","Alias"->"DayLeader","Key"->"day","Url"->"https://h.bilibili.com/common/rank#/photo"|>,
+	9-><|"Name"->"周榜","Alias"->"WeekLeader","Key"->"week","Url"->"https://h.bilibili.com/common/rank#/photo"|>,
+	10-><|"Name"->"月榜","Alias"->"MonthLeader","Key"->"month","Url"->"https://h.bilibili.com/common/rank#/photo"|>
 |>;
 $PhotosAPI=<|
 	"Home"->"https://api.vc.bilibili.com/link_draw/v2/Doc/home",
@@ -41,7 +42,12 @@ $PhotosAPI=<|
 		"cos",StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Photo/list?category=cos&type=hot&page_num=`p`&page_size=20"],
 		"sifu",StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Photo/list?category=sifu&type=hot&page_num=`p`&page_size=20"],
 		"allp",StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Photo/list?category=all&type=hot&page_num=`p`&page_size=20"]
-	]]
+	]],
+	"Rank"->Function[{
+		StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Doc/ranklist?biz=1&rank_type=`time`&page_size=50"][#],
+		StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Doc/ranklist?biz=2&category=cos&rank_type=`time`&page_size=50"][#],
+		StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Doc/ranklist?biz=2&category=sifu&rank_type=`time`&page_size=50"][#]
+	}]
 |>;
 
 
@@ -87,7 +93,7 @@ PhotosRange[input_List,OptionsPattern[]]:=Module[
 	|>]
 ];
 
-PhotosIndex::usage="";
+
 PhotosIndex[]:=Module[
 	{$now=Now,get,bg,size,imgs},
 	get=URLExecute[$PhotosAPI["Home"],"RawJSON"]["data"];
@@ -231,6 +237,39 @@ PhotosAuthor[id_]:=Module[
 		"Date"->$now
 	|>]
 ];
+
+
+PhotosRankReshape::usage="内部函数, 用于数据清洗";
+PhotosRankReshape[doc_Association]:=<|
+	"uid"->doc["user","uid"],
+	"author"->doc["user","name"],
+	"did"->doc["item","doc_id"],
+	"title"->doc["item","title"],
+	"time"->FromUnixTime[doc["item","upload_time"]],
+	"imgs"->("img_src"/.doc["item","pictures"]),
+	"size"->If[KeyExistsQ[First@doc["item","pictures"],"img_size"],
+		Total["img_size"/.doc["item","pictures"]],
+		Missing
+	]
+|>;
+
+Options[PhotosRank]={RawData->False};
+PhotosRank[typenum_,OptionsPattern[]]:=Module[
+	{$now=Now,api,raw,data},
+	api=$PhotosAPI["Rank"][<|"time"->$PhotoKeyMap[typenum]["Key"]|>];
+	raw=Flatten[URLExecute[#,"RawJSON"]["data","items"]&/@api];
+	If[OptionValue[RawData],Return[raw]];
+	data=PhotosRankReshape/@raw;
+	BilibiliAlbumObject[<|
+		"Data"->data,
+		"Category"->"PhotosRank"<>$PhotoKeyMap[typenum]["Alias"],
+		"Repo"->"150 of 150",
+		"Count"->Length@Flatten["imgs"/.data],
+		"Size"->Total@DeleteCases["size"/.data,Missing],
+		"Time"->Now-$now,
+		"Date"->$now
+	|>]
+]
 
 
 End[]
