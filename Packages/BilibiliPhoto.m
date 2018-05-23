@@ -4,7 +4,7 @@ PhotosIndex::usage="";
 PhotosRange::usage="";
 PhotosHot::usage="";
 PhotosNew::usage="";
-
+PhotosRank::usage="";
 Begin["`Photo`"];
 $PhotoKeyMap=<|
 	1-><|"Name"->"插画","Alias"->"Illustration","Key"->"illustration","Url"->"https://h.bilibili.com/eden/draw_area#/illustration"|>,
@@ -125,7 +125,10 @@ PhotosHotReshape[doc_Association]:=<|
 	"uid"->doc["user","uid"],
 	"author"->doc["user","name"],
 	"did"->doc["item","doc_id"],
-	"title"->doc["item","title"],
+	"title"->If[doc["item","title"]!="",
+		doc["item","title"],
+		"无名_"<>ToString[doc["item","doc_id"]]
+	],
 	"time"->FromUnixTime[doc["item","upload_time"]],
 	"imgs"->("img_src"/.doc["item","pictures"]),
 	"size"->If[
@@ -170,7 +173,10 @@ PhotosNewReshape[doc_Association]:=<|
 	"uid"->doc["user","uid"],
 	"author"->doc["user","name"],
 	"did"->doc["item","doc_id"],
-	"title"->doc["item","title"],
+	"title"->If[doc["item","title"]!="",
+		doc["item","title"],
+		"无名_"<>ToString[doc["item","doc_id"]]
+	],
 	"time"->FromUnixTime[doc["item","upload_time"]],
 	"imgs"->("img_src"/.doc["item","pictures"]),
 	"size"->If[
@@ -212,7 +218,10 @@ PhotosAuthorReshape[doc_Association]:=<|
 	"uid"->doc["poster_uid"],
 	"author"->doc["description"],
 	"did"->doc["doc_id"],
-	"title"->If[doc["title"]=="",doc["doc_id"],doc["title"]],
+	"title"->If[doc["item","title"]!="",
+		doc["item","title"],
+		"无名_"<>ToString[doc["item","doc_id"]]
+	],
 	"time"->FromUnixTime[doc["ctime"]],
 	"imgs"->("img_src"/.doc["pictures"]),
 	"size"->If[
@@ -244,7 +253,10 @@ PhotosRankReshape[doc_Association]:=<|
 	"uid"->doc["user","uid"],
 	"author"->doc["user","name"],
 	"did"->doc["item","doc_id"],
-	"title"->doc["item","title"],
+	"title"->If[doc["item","title"]!="",
+		doc["item","title"],
+		"无名_"<>ToString[doc["item","doc_id"]]
+	],
 	"time"->FromUnixTime[doc["item","upload_time"]],
 	"imgs"->("img_src"/.doc["item","pictures"]),
 	"size"->If[KeyExistsQ[First@doc["item","pictures"],"img_size"],
@@ -269,7 +281,7 @@ PhotosRank[typenum_,OptionsPattern[]]:=Module[
 		"Time"->Now-$now,
 		"Date"->$now
 	|>]
-]
+];
 
 
 End[]

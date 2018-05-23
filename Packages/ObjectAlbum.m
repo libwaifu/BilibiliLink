@@ -32,16 +32,17 @@ SizeConvert[x_Integer]:=N@Piecewise[{
 	{Quantity[x/1024,"Megabytes"],1024^2/2>x>=1024/2},
 	{Quantity[x/1024^2,"Gigabytes"],x>=1024^2/2}
 }];
-ImageSizeConvert[size_]:=Switch[
-	size,
-	Tiny,"@125w_125h_1e.webp",
-	Small,"@125w_125h_1e.webp",
-	Normal,"@125w_125h_1e.webp",
-	Large,"@125w_125h_1e.webp",
-	Full,"",
-	__,""
+Options[ImageSizeConvert]={Format->"webp"};
+ImageSizeConvert[size_,OptionsPattern[]]:=StringTemplate["@`s`w_`s`h_1e.`f`"][
+	<|"s"->size,"f"->OptionValue[Format]|>
 ];
-
+MapMonitored[f_,args_List]:=Module[
+	{x=0},
+	Monitor[
+		MapIndexed[(x=#2[[1]];f[#1])&,args],
+		ProgressIndicator[x/Length[args]]
+	]
+]
 
 
 
@@ -89,6 +90,19 @@ PicturesPack2MD[doc_Association]:=StringJoin@Riffle[Join[
 	{"\r---\r\r"}
 ],"\r"];
 
-
+Options[AlbumCollage]={
+	Max->25,
+	ItemSize->250,
+	ImageSize->Automatic,
+	AspectRatio->GoldenRatio
+};
+AlbumCollage[ass_,OptionsPattern[]]:=Module[
+	{imgs,get,fliter,$now=Now,ar=OptionValue[AspectRatio]},
+	imgs=RandomSample[Flatten["imgs"/.ass["Data"]],UpTo[OptionValue[Max]]];
+	get=MapMonitored[URLExecute[#<>ImageSizeConvert[OptionValue[ItemSize]]]&,imgs];
+	fliter=Select[get,1/ar<ImageAspectRatio[#]<ar&];
+	Echo[Now-$now,"Time Used:"];
+	ImageCollage[fliter,Background->Transparent,Method->"Rows",ImageSize->OptionValue[ImageSize]]
+];
 
 End[]
