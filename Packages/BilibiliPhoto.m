@@ -43,6 +43,10 @@ $PhotosAPI=<|
 		"sifu",StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Photo/list?category=sifu&type=hot&page_num=`p`&page_size=20"],
 		"allp",StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Photo/list?category=all&type=hot&page_num=`p`&page_size=20"]
 	]],
+	"Recommend"->Function[{
+		StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Doc/index?type=recommend&page_num=`p`&page_size=20"][#],
+		StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Photo/index?type=recommend&page_num=`p`&page_size=20"][#]
+	}],
 	"Rank"->Function[{
 		StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Doc/ranklist?biz=1&rank_type=`time`&page_size=50"][#],
 		StringTemplate["https://api.vc.bilibili.com/link_draw/v2/Doc/ranklist?biz=2&category=cos&rank_type=`time`&page_size=50"][#],
