@@ -33,8 +33,14 @@ SizeConvert[x_Integer]:=N@Piecewise[{
 	{Quantity[x/1024^2,"Gigabytes"],x>=1024^2/2}
 }];
 Options[ImageSizeConvert]={Format->"webp"};
-ImageSizeConvert[size_,OptionsPattern[]]:=StringTemplate["@`s`w_`s`h_1e.`f`"][
-	<|"s"->size,"f"->OptionValue[Format]|>
+ImageSizeConvert[size_,OptionsPattern[]]:=Switch[
+	size,
+	Tiny,"@125w_125h_1e."<>OptionValue[Format],
+	Small,"@250w_250h_1e."<>OptionValue[Format],
+	Normal,"@500w_500h_1e."<>OptionValue[Format],
+	Large,"@1000w_1000h_1e."<>OptionValue[Format],
+	RawData,"",
+	_,size
 ];
 MapMonitored[f_,args_List]:=Module[
 	{x=0},
@@ -42,7 +48,7 @@ MapMonitored[f_,args_List]:=Module[
 		MapIndexed[(x=#2[[1]];f[#1])&,args],
 		ProgressIndicator[x/Length[args]]
 	]
-]
+];
 
 
 
@@ -92,7 +98,7 @@ PicturesPack2MD[doc_Association]:=StringJoin@Riffle[Join[
 
 Options[AlbumCollage]={
 	Max->25,
-	ItemSize->250,
+	ItemSize->Small,
 	ImageSize->Automatic,
 	AspectRatio->GoldenRatio
 };
@@ -104,5 +110,19 @@ AlbumCollage[ass_,OptionsPattern[]]:=Module[
 	Echo[Now-$now,"Time Used:"];
 	ImageCollage[fliter,Background->Transparent,Method->"Rows",ImageSize->OptionValue[ImageSize]]
 ];
-
+Options[AlbumDownload]={ImageSize->RawData,Format->"webp"};
+AlbumDownload[ass_,OptionsPattern[]]:=Module[
+	{data},
+	data=Function[doc,
+		<|"Name"->Last@StringSplit[#,"/"],"URL"->#|>&/@
+			(#<>ImageSizeConvert[OptionValue[ImageSize],Format->OptionValue[Format]]&/@doc["imgs"])
+	][Flatten[reshape/@ass["Data"]]];
+	BilibiliDownloadObject[<|
+		"Date"->ass["Date"],
+		"Category"->ass["Category"],
+		"Data"->data,
+		"Path"->FileNameJoin[{$BilibiliLinkData,"Image",ass["Category"]}],
+		"Size"->ass["Size"]
+	|>]
+];
 End[]

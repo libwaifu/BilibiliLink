@@ -12,7 +12,7 @@ BilibiliDownloadObject/:MakeBoxes[obj:BilibiliDownloadObject[asc_?BilibiliDownlo
 		{BoxForm`SummaryItem[{"Type: ","DownloadObject"}]},
 		{BoxForm`SummaryItem[{"Category: ",asc["Category"]}]},
 		{BoxForm`SummaryItem[{"Count: ",Length@asc["Data"]}]},
-		{BoxForm`SummaryItem[{"Size: ",asc["Size"]}]}
+		{BoxForm`SummaryItem[{"Size: ",SizeConvert[asc["Size"]]}]}
 	};
 	below={
 		{BoxForm`SummaryItem[{"Date: ",DateString[asc["Date"]]}]},

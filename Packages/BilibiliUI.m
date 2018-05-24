@@ -1,6 +1,6 @@
 
-PhotosInit::usage="xxx";
-(*Begin["`UI`"];*)
+PhotosHelp::usage="xxx";
+Begin["`UI`"];
 
 
 
@@ -58,7 +58,7 @@ Temp1[text_String,fun_]:={{
 	{BLine[300],SpanFromLeft}
 };
 
-pHot=Grid[Join[
+pHot=Grid[Most@Join[
 	Temp1["1.热门插画",PhotosHot[1]],
 	Temp1["2.热门漫画",PhotosHot[2]],
 	Temp1["3.其他画作",PhotosHot[3]],
@@ -68,7 +68,7 @@ pHot=Grid[Join[
 	Temp1["7.全部摄影",PhotosHot[7]]
 ],Alignment->{{Left,Right}},Selectable->False
 ];
-pNew=Grid[Join[
+pNew=Grid[Most@Join[
 	Temp1["1.热门插画",PhotosNew[1]],
 	Temp1["2.热门漫画",PhotosNew[2]],
 	Temp1["3.其他画作",PhotosNew[3]],
@@ -78,17 +78,18 @@ pNew=Grid[Join[
 	Temp1["7.全部摄影",PhotosNew[7]]
 ],Alignment->{{Left,Right}},Selectable->False
 ];
-pRec=Panel[x+y+z];
+pRec="未完成";
+pSearch="未完成";
 pRank=Grid[Join[
 	Temp1["1.日榜/新人榜",PhotosRank[8]],
 	Temp1["2.周榜",PhotosRank[9]],
 	Temp1["3.月榜",PhotosRank[10]]
 ],Alignment->{{Left,Right}},Selectable->False
 ];
-PhotosInit[___]:=Module[
+PhotosHelp[___]:=Module[
 	{
-		tb=Text/@{"最新","热门","推荐","排行"},
-		st={pNew,pHot,pRec,pRank}
+		tb=Text/@{"最新","热门","推荐","排行","搜索"},
+		st={pNew,pHot,pRec,pRank,pSearch}
 	},
 	TabView[Thread[tb->st],ControlPlacement->Left,Alignment->Left,AutoAction->True]
 ];
@@ -96,4 +97,4 @@ PhotosInit[___]:=Module[
 
 
 
-(*End[]*)
+End[]
