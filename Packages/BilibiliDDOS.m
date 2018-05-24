@@ -8,14 +8,15 @@ VipEmojiReshape[line_]:=Block[
 		<|"ID"->#["id"],"URL"->#["url"],"Name"->StringTake[#["name"],2;;-2]|>&/@drop,
 		<|"ID"->line["pid"],"URL"->line["purl"],"Name"->line["pname"]|>
 	]];
-BilibiliVipEmoji[]:=Block[
+Options[BilibiliVipEmoji]={Path->FileNameJoin[{$BilibiliLinkData,"Image","Emoji"}]};
+BilibiliVipEmoji[___,OptionsPattern[]]:=Block[
 	{get=URLExecute["http://api.bilibili.com/x/v2/reply/emojis","RawJSON"]["data"]},
 	BilibiliDownloadObject[<|
 		"Date"->Now,
 		"Category"->"Bilibili Vip Emoji",
 		"Data"->SortBy[Flatten[VipEmojiReshape/@get],"ID"],
-		"Path"->FileNameJoin[{$BilibiliLinkData,"Image","Emoji"}],
-		"Size"->UnitConvert[Quantity[5021696., "Bytes"], "Megabytes"]
+		"Path"->OptionValue[Path],
+		"Size"->5021696.
 	|>
 ]];
 BilibiliVipEmoji["Raw"]:=URLExecute["http://api.bilibili.com/x/v2/reply/emojis","RawJSON"]["data"];
@@ -27,18 +28,32 @@ IndexIconReshape[line_]:=<|
 	"Name"->line["title"],
 	"URL"->line["icon"]
 |>;
-BilibiliIndexIcon[]:=Block[
+Options[BilibiliIndexIcon]={Path->FileNameJoin[{$BilibiliLinkData,"Image","Icon"}]};
+BilibiliIndexIcon[___,OptionsPattern[]]:=Block[
 	{get=URLExecute["https://www.bilibili.com/index/index-icon.json","RawJSON"]["fix"]},
 	BilibiliDownloadObject[<|
 		"Date"->Now,
 		"Category"->"Bilibili Index Icon",
 		"Data"->SortBy[Flatten[IndexIconReshape/@get],"ID"],
-		"Path"->FileNameJoin[{$BilibiliLinkData,"Image","Icon"}],
-		"Size"->UnitConvert[Quantity[8015872., "Bytes"], "Megabytes"]
+		"Path"->OptionValue[Path],
+		"Size"->8015872.
 	|>
 ]];
 BilibiliIndexIcon["Raw"]:=URLExecute["https://www.bilibili.com/index/index-icon.json","RawJSON"]["fix"];
-
+tsLine[doc_]:={
+	"#### Title: "<>doc["id"]<>"_"<>doc["title"],
+	"##### Time: "<>DateString[FromUnixTime[ToExpression@doc["sttime"]]],
+	"##### Link: "<>StringDelete[URLDecode@URLDecode@First@doc["links"]," "],
+	"!["<>First@doc["links"]<>"](https:"<>doc["icon"]<>")",
+	"---"
+};
+BilibiliIndexIcon["Markdown",OptionsPattern[]]:=Block[
+	{get=BilibiliIndexIcon["Raw"],file=OptionValue[Path],name},
+	name=FileNameJoin[{file,"Readme.md"}];
+	If[!FileExistsQ[file],CreateFile[file]];
+	If[FileExistsQ[name],DeleteFile[name]];
+	Export[name,StringJoin@Riffle[Flatten[tsLine/@SortBy[get,#["id"]&]],"\r"],"Text"]
+]
 
 
 ErrorPageExtension={
@@ -73,15 +88,16 @@ ErrorPageReshape[line_]:=<|
 	"Name"->StringJoin["error_cover_",line["id"]],
 	"URL"->line["data","img"]
 |>;
-BilibiliErrorPage[]:=Block[
+Options[BilibiliErrorPage]={Path->FileNameJoin[{$BilibiliLinkData,"Image","Icon"}]};
+BilibiliErrorPage[___,OptionsPattern[]]:=Block[
 	{get=URLExecute["www.bilibili.com/activity/web/view/data/31","RawJSON"]["data","list"],data},
 	data=Join[ErrorPageReshape/@get,MapIndexed[ErrorPageExtensionReshape,ErrorPageExtension]];
 	BilibiliDownloadObject[<|
 		"Date"->Now,
 		"Category"->"Bilibili Error Page",
 		"Data"->SortBy[data,"ID"],
-		"Path"->FileNameJoin[{$BilibiliLinkData,"Image","ErrorPage"}],
-		"Size"->UnitConvert[Quantity[58363904., "Bytes"], "Megabytes"]
+		"Path"->OptionValue[Path],
+		"Size"->58363904.
 	|>
 ]];
 

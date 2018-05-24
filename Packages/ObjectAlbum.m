@@ -15,7 +15,7 @@ BilibiliAlbumObject/:MakeBoxes[obj:BilibiliAlbumObject[asc_?BilibiliAlbumObjectQ
 		{BoxForm`SummaryItem[{"Date: ",DateString[asc["Date"]]}]},
 		{BoxForm`SummaryItem[{"Repo: ",asc["Repo"]}]},
 		{BoxForm`SummaryItem[{"Count: ",asc["Count"]}]},
-		{BoxForm`SummaryItem[{"Size: ",SizeConvert[asc["Size"]]}]},
+		{BoxForm`SummaryItem[{"Size: ",AlbumSizeConvert[asc["Size"]]}]},
 		{BoxForm`SummaryItem[{"Time: ",asc["Time"]}]}
 	};
 	below={};
@@ -27,7 +27,7 @@ BilibiliAlbumObject/:MakeBoxes[obj:BilibiliAlbumObject[asc_?BilibiliAlbumObjectQ
 	]
 ];
 (*Aid Functions*)
-SizeConvert[x_Integer]:=N@Piecewise[{
+AlbumSizeConvert[x_Integer]:=N@Piecewise[{
 	{Quantity[x, "Kilobytes"],x<1024/2},
 	{Quantity[x/1024,"Megabytes"],1024^2/2>x>=1024/2},
 	{Quantity[x/1024^2,"Gigabytes"],x>=1024^2/2}
@@ -62,7 +62,7 @@ BilibiliAlbumObject[ass_][func_String]:=Switch[
 	"Image",Flatten["imgs"/.Lookup[ass,"Data"]],
 	"m",BilibiliAlbumObject[ass]["Markdown"],
 	"Markdown",PicturesPackMarkdownExport[ass],
-	"do",BilibiliAlbumObject[ass]["Download"],
+	"do",AlbumDownload[ass]["Download"],
 	"Download",AlbumDownload[ass],
 	_,BilibiliAlbumObjectHelp[]
 ];
@@ -79,7 +79,7 @@ PicturesPackMarkdownExport[ass_]:=Block[
 	{text = PicturesPack2MD[Lookup[ass, "Data"]], name, file},
 	name = DateString[Lookup[ass, "Date"], {"Year", "-", "Month", "-", "Day", "-"}] <>ToString[Hash@text] <> ".md";
 	file = FileNameJoin[{$BilibiliLinkData, "Markdown", name}];
-	If[FileExistsQ[file],Message[BilibiliExport::NoFile, name];Return[file],CreateFile[file]];
+	If[FileExistsQ[file],Return[file],CreateFile[file]];
 	Export[file, text, "Text"]
 ];
 PicturesPack2MD::usage="将Album对象中的数据导出为Markdown格式.";
@@ -110,7 +110,11 @@ AlbumCollage[ass_,OptionsPattern[]]:=Module[
 	Echo[Now-$now,"Time Used:"];
 	ImageCollage[fliter,Background->Transparent,Method->"Rows",ImageSize->OptionValue[ImageSize]]
 ];
-Options[AlbumDownload]={ImageSize->RawData,Format->"webp"};
+Options[AlbumDownload]={
+	ImageSize->RawData,
+	Format->"webp",
+	Path->FileNameJoin[{$BilibiliLinkData,"Image",ass["Category"]}]
+};
 AlbumDownload[ass_,OptionsPattern[]]:=Module[
 	{data},
 	data=Function[doc,
@@ -121,7 +125,7 @@ AlbumDownload[ass_,OptionsPattern[]]:=Module[
 		"Date"->ass["Date"],
 		"Category"->ass["Category"],
 		"Data"->data,
-		"Path"->FileNameJoin[{$BilibiliLinkData,"Image",ass["Category"]}],
+		"Path"->OptionValue[Path],
 		"Size"->ass["Size"]
 	|>]
 ];

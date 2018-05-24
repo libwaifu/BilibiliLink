@@ -12,7 +12,7 @@ BilibiliDownloadObject/:MakeBoxes[obj:BilibiliDownloadObject[asc_?BilibiliDownlo
 		{BoxForm`SummaryItem[{"Type: ","DownloadObject"}]},
 		{BoxForm`SummaryItem[{"Category: ",asc["Category"]}]},
 		{BoxForm`SummaryItem[{"Count: ",Length@asc["Data"]}]},
-		{BoxForm`SummaryItem[{"Size: ",SizeConvert[asc["Size"]]}]}
+		{BoxForm`SummaryItem[{"Size: ",DownloadSizeConvert[asc["Size"]]}]}
 	};
 	below={
 		{BoxForm`SummaryItem[{"Date: ",DateString[asc["Date"]]}]},
@@ -27,7 +27,7 @@ BilibiliDownloadObject/:MakeBoxes[obj:BilibiliDownloadObject[asc_?BilibiliDownlo
 ];
 
 (*Aid Functions*)
-SizeConvert[x_Integer]:=N@Piecewise[{
+DownloadSizeConvert[x_Integer]:=N@Piecewise[{
 	{Quantity[x, "Kilobytes"],x<1024/2},
 	{Quantity[x/1024,"Megabytes"],1024^2/2>x>=1024/2},
 	{Quantity[x/1024^2,"Gigabytes"],x>=1024^2/2}
