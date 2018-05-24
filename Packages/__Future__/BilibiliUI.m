@@ -1,3 +1,5 @@
+
+PhotosInit::usage="xxx";
 (*Begin["`UI`"];*)
 
 
@@ -44,35 +46,54 @@ BLine[length_]:=Panel["", Appearance -> Image[
 ], ImageMargins -> 5, ImageSize -> {length, 1}
 ];
 
-pHot=Column[{
-	TextCell["1.热门插画","Text",Selectable->False],
-	InputField[Defer[1+1]],
-	BLine[300],
-	TextCell["2.热门漫画","Text",Selectable->False],
-	InputField[Defer[1+1]],
-	BLine[300],
-	TextCell["3.其他画作","Text",Selectable->False],
-	InputField[Defer[1+1]],
-	BLine[300],
-	TextCell["4.全部画作","Text",Selectable->False],
-	InputField[Defer[1+1]],
-	BLine[300],
-	TextCell["5.Cosplay","Text",Selectable->False],
-	InputField[Defer[1+1]],
-	BLine[300],
-	TextCell["6.其他摄影","Text",Selectable->False],
-	InputField[Defer[1+1]],
-	BLine[300],
-	TextCell["7.全部摄影","Text",Selectable->False],
-	InputField[Defer[1+1]],
-	BLine[300],
-	TextCell["8.帮助文档","Text",Selectable->False]
-},ItemSize->22];
+SetAttributes[Temp1,HoldAll];
+Temp1[text_String,fun_]:={{
+	TextCell[text,"Text"],
+	Row[{
+		Button["Copy",CopyToClipboard[Defer@fun]],
+		Button["Run",CellPrint[ExpressionCell[fun,"Output"]]]
+	}]
+},
+	{InputField[Defer[fun]],SpanFromLeft},
+	{BLine[300],SpanFromLeft}
+};
 
+pHot=Grid[Join[
+	Temp1["1.热门插画",PhotosHot[1]],
+	Temp1["2.热门漫画",PhotosHot[2]],
+	Temp1["3.其他画作",PhotosHot[3]],
+	Temp1["4.全部画作",PhotosHot[4]],
+	Temp1["5.Cosplay",PhotosHot[5]],
+	Temp1["6.其他摄影",PhotosHot[6]],
+	Temp1["7.全部摄影",PhotosHot[7]]
+],Alignment->{{Left,Right}},Selectable->False
+];
+pNew=Grid[Join[
+	Temp1["1.热门插画",PhotosNew[1]],
+	Temp1["2.热门漫画",PhotosNew[2]],
+	Temp1["3.其他画作",PhotosNew[3]],
+	Temp1["4.全部画作",PhotosNew[4]],
+	Temp1["5.Cosplay",PhotosNew[5]],
+	Temp1["6.其他摄影",PhotosNew[6]],
+	Temp1["7.全部摄影",PhotosNew[7]]
+],Alignment->{{Left,Right}},Selectable->False
+];
 pRec=Panel[x+y+z];
-tb=Text/@{"推荐","最新","热门","排行"};
-st={pRec,2,pHot,4};
-PhotosInit[___]:=TabView[Thread[tb->st],ControlPlacement->Left,Alignment->Left,AutoAction->True]
+pRank=Grid[Join[
+	Temp1["1.日榜/新人榜",PhotosRank[8]],
+	Temp1["2.周榜",PhotosRank[9]],
+	Temp1["3.月榜",PhotosRank[10]]
+],Alignment->{{Left,Right}},Selectable->False
+];
+PhotosInit[___]:=Module[
+	{
+		tb=Text/@{"最新","热门","推荐","排行"},
+		st={pNew,pHot,pRec,pRank}
+	},
+	TabView[Thread[tb->st],ControlPlacement->Left,Alignment->Left,AutoAction->True]
+];
+
+
 
 
 (*End[]*)
