@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/GalAster/BilibiliLink.svg?branch=master)](https://travis-ci.org/GalAster/BilibiliLink)
 [![Mathematica](https://img.shields.io/badge/Mathematica-%3E%3D11.3-brightgreen.svg)](https://www.wolfram.com/mathematica/)
-[![Release Vision](https://img.shields.io/badge/release-v0.3.0-ff69b4.svg)](https://github.com/GalAster/BilibiliLink/releases)
+[![Release Vision](https://img.shields.io/badge/release-v0.3.x-ff69b4.svg)](https://github.com/GalAster/BilibiliLink/releases)
 [![Repo Size](https://img.shields.io/github/repo-size/GalAster/BilibiliLink.svg)](https://github.com/GalAster/BilibiliLink.git)
 
 ![](https://i.loli.net/2018/05/20/5b0170b1f1494.png)
@@ -16,50 +16,13 @@ BilibiliLink 提供了一系列获取B站数据的方法, 计划中的内容有,
 ## Install
 ![](https://i.loli.net/2018/05/20/5b0170a0f01f9.png)
 
-### 更改软件编码
-
-开发和调试过程都是在UTF-8下进行的, 编码导致的问题不予解决, 如果你不确定你的编码是什么, 可以运行如下代码检查.
-
-```mma
-If[$CharacterEncoding=!="UTF-8",
-	$CharacterEncoding="UTF-8";
-	Print[{
-		Style["$CharacterEncoding has changed to UTF-8 to avoid problems.",Red],
-		Style["Because BilibiliLink only works under UTF-8"]
-	}//TableForm];
-	st=OpenAppend[FindFile["init.m"]];
-	WriteString[st,"$CharacterEncoding=\"UTF-8\";"];
-	Close[st];
-];
-```
 ### Automatic Installation
 
-版本号达到 v0.6.0 以后我会提交到部署服务器.
-
-### Manual Installation
-
-打开目录:
-
+第一条命令安装, 第二条命令更新, 第三条命令卸载
 ```mma
-SystemOpen[FileNameJoin@{$UserBaseDirectory, "Applications"}]
-```
-
-下载项目:
-
-```bash
-git clone git@github.com:Moe-Net/BilibiliLink.git --depth 1
-```
-
-#### Update
-
-```bash
-git pull
-```
-
-#### Uninstall
-
-```bash
-rm -rf BilibiliLink
+PacletInstall["BilibilliLink","Site"->"http://math.owo.site/"]
+PacletUpdate["BilibilliLink","Site"->"http://math.owo.site/"]
+PacletUninstall["BilibilliLink"]
 ```
 
 ## Show Time
