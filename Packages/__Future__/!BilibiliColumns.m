@@ -1,4 +1,3 @@
-
 BilibiliArticle::usage = "将HTML转化为Markdown格式.";
 (* ::Section:: *)
 (*程序包正体*)
@@ -7,38 +6,38 @@ Begin["`Columns`"];
 (*主体代码*)
 (* ::Subsubsection:: *)
 (*下载并转化专栏*)
-Options[BilibiliArticle]={Debug->False};
-BilibiliArticle[cv_,OptionsPattern[]]:=Block[
+Options[BilibiliArticle] = {Debug -> False};
+BilibiliArticle[cv_, OptionsPattern[]] := Block[
 	{
-		xml,pre,body,
-		raw=Import["https://www.bilibili.com/read/cv"<>ToString@cv,{"HTML","XMLObject"}]
+		xml, pre, body,
+		raw = Import["https://www.bilibili.com/read/cv" <> ToString@cv, {"HTML", "XMLObject"}]
 	},
-	xml=Flatten@Cases[raw,XMLElement["div",{"class"->"article-holder"},t___]:>t,Infinity,1];
-	pre=xml/.{
-		XMLElement["h1",{},{h__}]:>StringJoin["\n# ",h,"\n"],
-		XMLElement["h2",{},{h__}]:>StringJoin["\n## ",h,"\n"],
-		XMLElement["h3",{},{h__}]:>StringJoin["\n### ",h,"\n"],
-		XMLElement["h4",{},{h__}]:>StringJoin["\n#### ",h,"\n"],
-		XMLElement["h5",{},{h__}]:>StringJoin["\n##### ",h,"\n"],
-		XMLElement["h6",{},{h__}]:>StringJoin["\n###### ",h,"\n"],
-		XMLElement["strong",{},{b_}]:>StringJoin["**",b,"**"],(*粗体标识*)
-		XMLElement["div",___,{text___}]:>text,
-		XMLElement["figure",err___]:>Nothing,(*错误解析, 直接删除*)
-		XMLElement["figcaption",err___]:>Nothing,(*错误解析, 直接删除*)
-		XMLElement["img",{"data-src"->img_,__},{}]:>StringJoin["![](",img,")"],
-		XMLElement["img",{"class"->_,"data-src"->img_},{}]:>StringJoin["![](",img,")"],
-		XMLElement["img",{"class"->"video-card nomal","data-src"->img_,__,"aid"->aid_,__},{}]:>StringTemplate[
+	xml = Flatten@Cases[raw, XMLElement["div", {"class" -> "article-holder"}, t___] :> t, Infinity, 1];
+	pre = xml /. {
+		XMLElement["h1", {}, {h__}] :> StringJoin["\n# ", h, "\n"],
+		XMLElement["h2", {}, {h__}] :> StringJoin["\n## ", h, "\n"],
+		XMLElement["h3", {}, {h__}] :> StringJoin["\n### ", h, "\n"],
+		XMLElement["h4", {}, {h__}] :> StringJoin["\n#### ", h, "\n"],
+		XMLElement["h5", {}, {h__}] :> StringJoin["\n##### ", h, "\n"],
+		XMLElement["h6", {}, {h__}] :> StringJoin["\n###### ", h, "\n"],
+		XMLElement["strong", {}, {b_}] :> StringJoin["**", b, "**"], (*粗体标识*)
+		XMLElement["div", ___, {text___}] :> text,
+		XMLElement["figure", err___] :> Nothing, (*错误解析, 直接删除*)
+		XMLElement["figcaption", err___] :> Nothing, (*错误解析, 直接删除*)
+		XMLElement["img", {"data-src" -> img_, __}, {}] :> StringJoin["![](", img, ")"],
+		XMLElement["img", {"class" -> _, "data-src" -> img_}, {}] :> StringJoin["![](", img, ")"],
+		XMLElement["img", {"class" -> "video-card nomal", "data-src" -> img_, __, "aid" -> aid_, __}, {}] :> StringTemplate[
 			"[![](`img`)](www.bilibili.com/blackboard/player.html?aid=`aid`)"
-		][<|"img"->img,"aid"->aid|>],
-		XMLElement["hr",___]:>"\n---\n"
+		][<|"img" -> img, "aid" -> aid|>],
+		XMLElement["hr", ___] :> "\n---\n"
 	};
-	body=pre/.{
-		XMLElement["p",{},{para___}]:>StringJoin["\n",para,"\n"],(*段落标识*)
-		XMLElement["blockquote",{},q_]:>StringJoin@Riffle[q,"> ",{1,-1,3}],
-		XMLElement["ul",{},{ul__}]:>StringJoin["\n",ul,"\n"],
-		XMLElement["li",{},{li__}]:>StringJoin["> ",li,"\n"]
+	body = pre /. {
+		XMLElement["p", {}, {para___}] :> StringJoin["\n", para, "\n"], (*段落标识*)
+		XMLElement["blockquote", {}, q_] :> StringJoin@Riffle[q, "> ", {1, -1, 3}],
+		XMLElement["ul", {}, {ul__}] :> StringJoin["\n", ul, "\n"],
+		XMLElement["li", {}, {li__}] :> StringJoin["> ", li, "\n"]
 	};
-	If[OptionValue[Debug],Return[body],StringJoin[ToString/@body]]
+	If[OptionValue[Debug], Return[body], StringJoin[ToString /@ body]]
 ];
 (*(*读入预处理*)
 	text=URLExecute["https://www.bilibili.com/read/cv423670","Text",CharacterEncoding->"UTF8"];
@@ -58,6 +57,6 @@ XMLElement["span",{"class"\[Rule]class_},{text_}]\[RuleDelayed]StringTemplate[
 (*附加设置*)
 SetAttributes[
 	{},
-	{Protected,ReadProtected}
+	{Protected, ReadProtected}
 ];
 End[]

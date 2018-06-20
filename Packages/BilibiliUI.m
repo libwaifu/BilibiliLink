@@ -1,10 +1,9 @@
-
-PhotosHelp::usage="xxx";
+PhotosHelp::usage = "xxx";
 Begin["`UI`"];
 
 
 
-BLine[length_]:=Panel["", Appearance -> Image[
+BLine[length_] := Panel["", Appearance -> Image[
 	RawArray["UnsignedInteger8", {
 		{{0, 0, 0, 0}, {0, 0, 0, 255}, {0, 0, 0, 0}},
 		{{0, 0, 0, 0}, {255, 255, 255, 255}, {0, 0, 0, 255}},
@@ -46,52 +45,52 @@ BLine[length_]:=Panel["", Appearance -> Image[
 ], ImageMargins -> 5, ImageSize -> {length, 1}
 ];
 
-SetAttributes[Temp1,HoldAll];
-Temp1[text_String,fun_]:={{
-	TextCell[text,"Text"],
+SetAttributes[Temp1, HoldAll];
+Temp1[text_String, fun_] := {{
+	TextCell[text, "Text"],
 	Row[{
-		Button["Copy",CopyToClipboard[Defer@fun]],
-		Button["Run",CellPrint[ExpressionCell[fun,"Output"]]]
+		Button["Copy", CopyToClipboard[Defer@fun]],
+		Button["Run", CellPrint[ExpressionCell[fun, "Output"]]]
 	}]
 },
-	{InputField[Defer[fun]],SpanFromLeft},
-	{BLine[300],SpanFromLeft}
+	{InputField[Defer[fun]], SpanFromLeft},
+	{BLine[300], SpanFromLeft}
 };
 
-pHot=Grid[Most@Join[
-	Temp1["1.热门插画",PhotosHot[1]],
-	Temp1["2.热门漫画",PhotosHot[2]],
-	Temp1["3.其他画作",PhotosHot[3]],
-	Temp1["4.全部画作",PhotosHot[4]],
-	Temp1["5.Cosplay",PhotosHot[5]],
-	Temp1["6.其他摄影",PhotosHot[6]],
-	Temp1["7.全部摄影",PhotosHot[7]]
-],Alignment->{{Left,Right}},Selectable->False
+pHot = Grid[Most@Join[
+	Temp1["1.热门插画", PhotosHot[1]],
+	Temp1["2.热门漫画", PhotosHot[2]],
+	Temp1["3.其他画作", PhotosHot[3]],
+	Temp1["4.全部画作", PhotosHot[4]],
+	Temp1["5.Cosplay", PhotosHot[5]],
+	Temp1["6.其他摄影", PhotosHot[6]],
+	Temp1["7.全部摄影", PhotosHot[7]]
+], Alignment -> {{Left, Right}}, Selectable -> False
 ];
-pNew=Grid[Most@Join[
-	Temp1["1.热门插画",PhotosNew[1]],
-	Temp1["2.热门漫画",PhotosNew[2]],
-	Temp1["3.其他画作",PhotosNew[3]],
-	Temp1["4.全部画作",PhotosNew[4]],
-	Temp1["5.Cosplay",PhotosNew[5]],
-	Temp1["6.其他摄影",PhotosNew[6]],
-	Temp1["7.全部摄影",PhotosNew[7]]
-],Alignment->{{Left,Right}},Selectable->False
+pNew = Grid[Most@Join[
+	Temp1["1.热门插画", PhotosNew[1]],
+	Temp1["2.热门漫画", PhotosNew[2]],
+	Temp1["3.其他画作", PhotosNew[3]],
+	Temp1["4.全部画作", PhotosNew[4]],
+	Temp1["5.Cosplay", PhotosNew[5]],
+	Temp1["6.其他摄影", PhotosNew[6]],
+	Temp1["7.全部摄影", PhotosNew[7]]
+], Alignment -> {{Left, Right}}, Selectable -> False
 ];
-pRec="未完成";
-pSearch="未完成";
-pRank=Grid[Join[
-	Temp1["1.日榜/新人榜",PhotosRank[8]],
-	Temp1["2.周榜",PhotosRank[9]],
-	Temp1["3.月榜",PhotosRank[10]]
-],Alignment->{{Left,Right}},Selectable->False
+pRec = "未完成";
+pSearch = "未完成";
+pRank = Grid[Join[
+	Temp1["1.日榜/新人榜", PhotosRank[8]],
+	Temp1["2.周榜", PhotosRank[9]],
+	Temp1["3.月榜", PhotosRank[10]]
+], Alignment -> {{Left, Right}}, Selectable -> False
 ];
-PhotosHelp[___]:=Module[
+PhotosHelp[___] := Module[
 	{
-		tb=Text/@{"最新","热门","推荐","排行","搜索"},
-		st={pNew,pHot,pRec,pRank,pSearch}
+		tb = Text /@ {"最新", "热门", "推荐", "排行", "搜索"},
+		st = {pNew, pHot, pRec, pRank, pSearch}
 	},
-	TabView[Thread[tb->st],ControlPlacement->Left,Alignment->Left,AutoAction->True]
+	TabView[Thread[tb -> st], ControlPlacement -> Left, Alignment -> Left, AutoAction -> True]
 ];
 
 

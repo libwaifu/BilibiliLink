@@ -1,21 +1,21 @@
 Paclet[
-  Name -> "BilibiliLink",
-  Version -> "0.3.1",
-  Extensions -> {
+    Name -> "BilibiliLink",
+    Version -> "0.3.1",
+    Extensions -> {
 
-    	{
+        {
 
-     		"Kernel",
+            "Kernel",
 
-     		"Root" -> ".",
+            "Root" -> ".",
 
-     		"Context" -> {"BilibiliLink`"},
+            "Context" -> {"BilibiliLink`"},
 
-     		Root -> ".",
+            Root -> ".",
 
-     		Context -> {"BilibiliLink`"}
+            Context -> {"BilibiliLink`"}
 
-     	}
+        }
 
     }
- ]
+]
