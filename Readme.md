@@ -1,9 +1,9 @@
 # BilibiliLink — 乾杯 - ( ゜ᴗ ゜)つロ
 
-[![Build Status](https://travis-ci.org/GalAster/BilibiliLink.svg?branch=master)](https://travis-ci.org/GalAster/BilibiliLink)
+[![Build Status](https://travis-ci.org/Moe-Net/BilibiliLink.svg?branch=master)](https://travis-ci.org/Moe-Net/BilibiliLink)
 [![Mathematica](https://img.shields.io/badge/Mathematica-%3E%3D11.3-brightgreen.svg)](https://www.wolfram.com/mathematica/)
-[![Release Vision](https://img.shields.io/badge/release-v0.3.x-ff69b4.svg)](https://github.com/GalAster/BilibiliLink/releases)
-[![Repo Size](https://img.shields.io/github/repo-size/GalAster/BilibiliLink.svg)](https://github.com/GalAster/BilibiliLink.git)
+[![Release Vision](https://img.shields.io/badge/release-v0.3.x-ff69b4.svg)](https://github.com/Moe-Net/BilibiliLink/releases)
+[![Repo Size](https://img.shields.io/github/repo-size/Moe-Net/BilibiliLink.svg)](https://github.com/Moe-Net/BilibiliLink.git)
 
 ![](https://i.loli.net/2018/05/20/5b0170b1f1494.png)
 

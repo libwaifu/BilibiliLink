@@ -28,9 +28,10 @@ BilibiliDownloadObject /: MakeBoxes[obj : BilibiliDownloadObject[asc_?BilibiliDo
 
 (*Aid Functions*)
 DownloadSizeConvert[x_] := N@Piecewise[{
-	{Quantity[x, "Kilobytes"], x < 1024 / 2},
-	{Quantity[x / 1024, "Megabytes"], 1024^2 / 2 > x >= 1024 / 2},
-	{Quantity[x / 1024^2, "Gigabytes"], x >= 1024^2 / 2}
+	{Quantity[x / 1024^0, "Bytes"], x < 1024 / 2},
+	{Quantity[x / 1024^1, "Kilobytes"], 1024^2 / 2 > x >= 1024^1 / 2},
+	{Quantity[x / 1024^2, "Megabytes"], 1024^3 / 2 > x >= 1024^2 / 2},
+	{Quantity[x / 1024^3, "Gigabytes"], x >= 1024^3 / 2}
 }];
 
 
