@@ -1,5 +1,15 @@
 BilibiliDownload::usage = "";
-BilibiliDownloadObject::usage = "";
+BilibiliDownloadObject::usage = ToString[Column[{
+	Row[{"初始化下载对象, ",Style["obj = BilibiliLink[...,Type->DownloadObject]",Blue]}],
+	Row[{Style["\t快速下载: ",Bold],"obj@\"do\""}],
+	Row[{Style["\t转换为md格式: ",Bold],"obj@\"m\""}],
+	Row[{Style["\t提取原始数据: ",Bold],"obj@\"d\""}],
+	Row[{Style["完整指令: ",Red,Bold],"简令: 指令 - 函数"}],
+	"\td: Data",
+	"\tm: MarkDown",
+	"\tdo: Download - BilibiliDownload"
+}],StandardForm];
+
 Begin["`Object`"];
 BilibiliDownloadObjectQ::usage = "BilibiliDownloadObject 合法性检测";
 BilibiliDownloadObjectQ[asc_?AssociationQ] := AllTrue[{"Path", "Data"}, KeyExistsQ[asc, #]&];
@@ -39,14 +49,14 @@ BilibiliDownloadObject[ass_][func_String] := Switch[
 	func,
 	"do", BilibiliDownload[ass],
 	"Download", BilibiliDownload[ass],
+	"d", Dataset[ass["Data"]],
 	"Data", Dataset[ass["Data"]],
-	_, BilibiliDownloadHelp[]
+	_, Information[BilibiliDownloadObject]
 ];
 BilibiliDownloadObject[ass_][func_String, {para__}] := Switch[
 	func,
-	"do", BilibiliDownload[ass, para],
 	"Download", BilibiliDownload[ass, para],
-	_, BilibiliDownloadHelp[]
+	_, Information[BilibiliDownloadObject]
 ];
 BilibiliDownloadObject[ass_][___] := BilibiliDownloadHelp[];
 

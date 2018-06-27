@@ -134,7 +134,7 @@ GetHeader[] := GetHeader[] = Block[
 	HeaderReshape /@ list
 ];
 
-HeaderBannerReshape[line_, {index_}] := <|"ID" -> index, "Name" -> Last@StringSplit[line["Banner"], {"/", "."}][[-2]], "URL" -> line["Banner"]|>;
+HeaderBannerReshape[line_, {index_}] := <|"ID" -> index, "Name" -> StringSplit[line["Banner"], {"/", "."}][[-2]], "URL" -> line["Banner"]|>;
 Options[HeaderBanner] = {Path -> FileNameJoin[{$BilibiliLinkData, "Image", "Banner"}]};
 HeaderBanner[___, OptionsPattern[]] := Block[
 	{get = GetHeader[], data},

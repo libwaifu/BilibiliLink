@@ -16,14 +16,14 @@ BilibiliLink 提供了一系列获取B站数据的方法, 计划中的内容有,
 ## Install
 ![](https://i.loli.net/2018/05/20/5b0170a0f01f9.png)
 
-### Automatic Installation
-
 第一条命令安装, 第二条命令更新, 第三条命令卸载
 ```mma
 PacletInstall["BilibilliLink","Site"->"http://math.owo.site/"]
 PacletUpdate["BilibilliLink","Site"->"http://math.owo.site/"]
 PacletUninstall["BilibilliLink"]
 ```
+
+对于开发者建议使用 [手动安装](https://github.com/Moe-Net/BilibiliLink/wiki/For-Developers).
 
 ## Show Time
 ![](https://i.loli.net/2018/05/20/5b01707e154e2.png)
