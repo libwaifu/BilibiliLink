@@ -1,6 +1,6 @@
 Paclet[
 	Name -> "BilibiliLink",
-	Version -> "0.3.3",
+	Version -> "0.3.4",
 	BuildNumber -> "20180705",
 	WolframVersion -> "11.3+",
 	Creator -> "GalAster",
