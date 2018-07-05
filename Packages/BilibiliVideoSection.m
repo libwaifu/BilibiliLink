@@ -69,7 +69,7 @@ VideoIDIterate[OptionsPattern[]] := Block[
 		"LimitTime" -> OptionValue["LimitTime"]
 	]&;
 	r = Range[Ceiling[min / 100], Ceiling[max / 100]];
-	fail = ParallelMap[do, Partition[r, UpTo[Ceiling[OptionValue["BlockSize"] / 100]]]];
+	fail = AbortableMap[do, Partition[r, UpTo[Ceiling[OptionValue["BlockSize"] / 100]]]];
 	Print[Text@Style["Failed Block:", Red]];
 	Flatten[fail]
 ];
