@@ -1,3 +1,4 @@
+AbortableMap::usage = "";
 Begin["`Functions`"]
 timeLeft[start_, frac_] := With[{past = AbsoluteTime[] - start}, If[frac == 0 || past < 1, "-", Floor[past / frac - past]]];
 AbortableMap[func_, list_, ker_ : $KernelCount] := DynamicModule[
@@ -6,7 +7,12 @@ AbortableMap[func_, list_, ker_ : $KernelCount] := DynamicModule[
 	results = {}; SetSharedVariable[results, size];
 	Monitor[
 		t = Table[ParallelSubmit[{i},
-			With[{r = func[list[[i]]]}, size += ByteCount[r]; AppendTo[results, {i, r}]]], {i, Range[len]}];
+			With[
+				{r = func[list[[i]]]},
+				size += ByteCount[r];
+				AppendTo[results, {i, r}]
+			]
+		], {i, Range[len]}];
 		CheckAbort[WaitAll[t], AbortKernels[]];
 		SortBy[results, First],
 		Dynamic@Refresh[Panel @ Column[{
@@ -22,5 +28,16 @@ AbortableMap[func_, list_, ker_ : $KernelCount] := DynamicModule[
 		]
 	]
 ];
-
+WriteCSV[file_String, matrix_] := With[
+	{
+		str = OpenWrite[file, PageWidth -> Infinity],
+		len = Length[First@matrix]
+	},
+	Scan[Write[str,
+		Sequence @@ (Flatten[
+			Table[{FortranForm[#[[i]]], OutputForm[","]}, {i, len - 1}]
+		]) ~ Join ~ {FortranForm[#[[len]]]}]&, matrix
+	];
+	Close[str];
+];
 End[]
