@@ -121,8 +121,8 @@ HeaderReshape[asc_] := Module[
 	<|
 		"Title" -> c["name"],
 		"Date" -> First@StringSplit[asc["n"], {"_", "-"}],
-		"Banner" -> "https://i0.hdslb.com/bfs/archive/" <> banner,
-		"Logo" -> "https://i0.hdslb.com/bfs/archive/" <> icon,
+		"Banner" -> "https://i0.hdslb.com/headers/" <> banner,
+		"Logo" -> "https://i0.hdslb.com/headers/" <> icon,
 		"Link" -> c["url"]
 	|>
 ];
