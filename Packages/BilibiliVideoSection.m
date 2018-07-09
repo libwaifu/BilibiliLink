@@ -3,6 +3,7 @@ VideoSection::usage = "";
 VideoIDsRange::usage = "遍历所有ID";
 VideoIDsList::usage = "遍历指定ID";
 VideoIDsPack::usage = "打包缓存";
+VideoIDsInsertDB::usage = "插入数据库";
 Begin["`Video`"];
 VideoSectionQ = MemberQ[$APIs["RidList"] // Keys // Rest, #]&;
 VideoSection[id_Integer] := Module[
@@ -26,7 +27,7 @@ Options[DownloadIDsRange] = {
 	"LimitTime" -> 10
 };
 DownloadIDsRange[ps_, OptionsPattern[]] := Block[
-	{file, do, data,fail},
+	{file, do, data, fail},
 	file = FileNameJoin[{OptionValue["Path"],
 		StringRiffle[{100(First@ps - 1) + 1, 100Last[ps]}, "-"] <> "." <> OptionValue["Format"]}
 	];
@@ -78,8 +79,8 @@ VideoIDsRange[max_Integer : 0, OptionsPattern[]] := Module[
 	log = FileNameJoin[{path, DateString[{"Year", "Month", "Day", "-", "Hour", "Minute", "Second"}] <> ".log.m"}];
 	Export[log, <|
 		"Date" -> Now,
-		"FailedIDs" -> Flatten[fail[[-2,All,2]]],
-		"RetryFunction"->"BilibiliLink`Video`DownloadIDsRange[...]"
+		"FailedIDs" -> Flatten[fail[[-2, All, 2]]],
+		"RetryFunction" -> "BilibiliLink`Video`DownloadIDsRange[...]"
 	|>]
 ];
 DistributeDefinitions[VideoIDsRange];
@@ -167,21 +168,35 @@ Options[VideoIDsPack] = {
 };
 VideoIDsPack[fs_List, {num_ : 0}, OptionsPattern[]] := Block[
 	{data, file, fmt},
-	file = FileNameJoin[{OptionValue["Path"],"Block_"<>ToString[num] <> ".WXF"}];
-	If[FileExistsQ@file,Return[Nothing]];
+	file = FileNameJoin[{OptionValue["Path"], "Block_" <> ToString[num] <> ".WXF"}];
+	If[FileExistsQ@file, Return[Nothing]];
 	data = Select[Flatten[Import /@ fs], AssociationQ];
 	fmt = SortBy[VideoIdsFormat /@ data, #["VideoID"]&] /. {Missing[__] :> ""};
 	Export[file, Dataset@fmt, PerformanceGoal -> "Size"];
 	Length@fmt
 ];
-VideoIDsPack[dir_String,ops: OptionsPattern[]] := Block[
+VideoIDsPack[dir_String, ops : OptionsPattern[]] := Block[
 	{all},
-	If[!DirectoryQ[OptionValue["Path"]],VideoIDsPack[{dir}]];
+	If[!DirectoryQ[OptionValue["Path"]], VideoIDsPack[{dir}]];
 	If[!FileExistsQ[OptionValue["Path"]], CreateDirectory[OptionValue["Path"]]];
-	all=SortBy[FileNames[{"*.WXF","*.Json"},dir],ToExpression[StringSplit[#,{"\\","-"}][[-2]]]&];
-	MapIndexed[AbsoluteTiming@VideoIDsPack[#,ops]&,Partition[all,UpTo[OptionValue["Pack"]]]]
+	all = SortBy[FileNames[{"*.WXF", "*.Json"}, dir], ToExpression[StringSplit[#, {"\\", "-"}][[-2]]]&];
+	MapIndexed[AbsoluteTiming@VideoIDsPack[#, ops]&, Partition[all, UpTo[OptionValue["Pack"]]]]
 ];
 
-
+VideoIDsInsertPack[fs_, db_] := With[
+	{in = Select[Flatten[Import /@ fs], AssociationQ]},
+	MongoCollectionInsert[db, Map[VideoIdsFormat, in] /. Missing[__] :> ""];
+];
+Options[VideoIDsInsertDB] = {"BatchSize" -> 1};
+VideoIDsInsertDB[dir_String, OptionsPattern[]] := Module[
+	{client, table, all, pt, tasks},
+	Needs["MongoLink`"];
+	client = MongoConnect["mongodb://localhost:27017"];
+	table = MongoGetCollection[client, "BilibiliLink", StringJoin["VideoData_", ToString[UnixTime[]]]];
+	all = SortBy[FileNames[{"*.WXF", "*.Json"}, dir], ToExpression[StringSplit[#, {"\\", "-"}][[-2]]]&];
+	pt = Partition[all, UpTo[OptionValue["BatchSize"]]];
+	tasks = Reap[AbsoluteTiming@Check[Inactive[VideoIDsInsertPack][#, table], Sow[#]]& /@ pt];
+	AbortableMap[Activate, tasks]
+];
 
 End[];
