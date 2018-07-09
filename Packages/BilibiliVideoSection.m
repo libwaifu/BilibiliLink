@@ -164,7 +164,8 @@ VideoIdsFormat[asc_] := <|
 
 Options[VideoIDsPack] = {
 	"Pack" -> 1000,
-	"Path" -> FileNameJoin[{$BilibiliLinkData, "VideoDataRaw"}]
+	"Path" -> FileNameJoin[{$BilibiliLinkData, "VideoDataRaw"}],
+	"Format" -> "WXF"
 };
 VideoIDsPack[fs_List, {num_ : 0}, OptionsPattern[]] := Block[
 	{data, file, fmt},
@@ -183,20 +184,19 @@ VideoIDsPack[dir_String, ops : OptionsPattern[]] := Block[
 	MapIndexed[AbsoluteTiming@VideoIDsPack[#, ops]&, Partition[all, UpTo[OptionValue["Pack"]]]]
 ];
 
-VideoIDsInsertPack[fs_, db_] := With[
+VideoIDsInsertPack[fs_, co_] := Block[
 	{in = Select[Flatten[Import /@ fs], AssociationQ]},
-	MongoCollectionInsert[db, Map[VideoIdsFormat, in] /. Missing[__] :> ""];
+	MongoCollectionInsert[co, Map[VideoIdsFormat, in] /. Missing[__] :> ""];
+	Length[in]
 ];
 Options[VideoIDsInsertDB] = {"BatchSize" -> 1};
-VideoIDsInsertDB[dir_String, OptionsPattern[]] := Module[
-	{client, table, all, pt, tasks},
-	Needs["MongoLink`"];
-	client = MongoConnect["mongodb://localhost:27017"];
-	table = MongoGetCollection[client, "BilibiliLink", StringJoin["VideoData_", ToString[UnixTime[]]]];
+VideoIDsInsertDB[dir_String, co_, OptionsPattern[]] := Block[
+	{client, all, pt, tasks},
 	all = SortBy[FileNames[{"*.WXF", "*.Json"}, dir], ToExpression[StringSplit[#, {"\\", "-"}][[-2]]]&];
 	pt = Partition[all, UpTo[OptionValue["BatchSize"]]];
-	tasks = Reap[AbsoluteTiming@Check[Inactive[VideoIDsInsertPack][#, table], Sow[#]]& /@ pt];
-	AbortableMap[Activate, tasks]
+	tasks = Inactive[Reap[Check[AbsoluteTiming[VideoIDsInsertPack[#, co]], Sow[#]]]]& /@ pt;
+	Print[tasks // First];
+	AbortableMap[Activate, Flatten@tasks]
 ];
-
+DistributeDefinitions[VideoIDsInsertDB];
 End[];
