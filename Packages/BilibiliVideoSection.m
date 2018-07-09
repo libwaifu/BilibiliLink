@@ -5,6 +5,10 @@ VideoIDsList::usage = "遍历指定ID";
 VideoIDsPack::usage = "打包缓存";
 VideoIDsInsertDB::usage = "插入数据库";
 Begin["`Video`"];
+
+timeLeft[start_, frac_] := With[{past = AbsoluteTime[] - start}, If[frac == 0 || past < 1, "-", Floor[past / frac - past]]];
+
+
 VideoSectionQ = MemberQ[$APIs["RidList"] // Keys // Rest, #]&;
 VideoSection[id_Integer] := Module[
 	{get = URLExecute[$APIs["VideoSection"][id], "RawJson"]},
@@ -184,19 +188,54 @@ VideoIDsPack[dir_String, ops : OptionsPattern[]] := Block[
 	MapIndexed[AbsoluteTiming@VideoIDsPack[#, ops]&, Partition[all, UpTo[OptionValue["Pack"]]]]
 ];
 
+VideoIdsFormat[asc_] := <|
+	"VideoID" -> asc["aid"],
+	"Title" -> asc["title"],
+	"Date" -> FromUnixTime[asc["pubdate"]],
+	"Length" -> asc["duration"],
+	"Pages" -> asc["videos"],
+	"Region" -> asc["tid"],
+	"CID" -> asc["cid"],
+	"OwnerID" -> asc["owner", "mid"],
+	"OwnerName" -> asc["owner", "name"],
+	"View" -> asc["stat", "view"],
+	"Favorite" -> asc["stat", "favorite"],
+	"Coin" -> asc["stat", "coin"],
+	"Share" -> asc["stat", "share"],
+	"Like" -> asc["stat", "like"],
+	"Dislike" -> asc["stat", "dislike"],
+	"Comment" -> asc["stat", "reply"],
+	"HighestRank" -> asc["stat", "his_rank"]
+|>;
+
 VideoIDsInsertPack[fs_, co_] := Block[
 	{in = Select[Flatten[Import /@ fs], AssociationQ]},
-	MongoCollectionInsert[co, Map[VideoIdsFormat, in] /. Missing[__] :> ""];
+	MongoLink`MongoCollectionInsert[co, Map[VideoIdsFormat, in] /. Missing[__] :> ""];
 	Length[in]
-];
+] // AbsoluteTiming;
 Options[VideoIDsInsertDB] = {"BatchSize" -> 1};
-VideoIDsInsertDB[dir_String, co_, OptionsPattern[]] := Block[
-	{client, all, pt, tasks},
+VideoIDsInsertDB[dir_String, db_, OptionsPattern[]] := Block[
+	{client, all, pt, tasks, ans, i = 0, j = 0},
 	all = SortBy[FileNames[{"*.WXF", "*.Json"}, dir], ToExpression[StringSplit[#, {"\\", "-"}][[-2]]]&];
 	pt = Partition[all, UpTo[OptionValue["BatchSize"]]];
-	tasks = Inactive[Reap[Check[AbsoluteTiming[VideoIDsInsertPack[#, co]], Sow[#]]]]& /@ pt;
-	Print[tasks // First];
-	AbortableMap[Activate, Flatten@tasks]
+	ans = With[
+		{table = MongoLink`MongoGetCollection[db, StringJoin["VideoData_",
+			DateString[{"Year", "Month", "Day", "Hour", "Minute", "Second"}]
+		]]},
+		Monitor[Map[
+			Reap[Check[i++;VideoIDsInsertPack[#, table], j++; Sow[#]]
+			]& , pt],
+			Grid[{
+				{Text[Style["Transforming :", Darker@Blue]], ProgressIndicator[i, {0, Length[pt]}]},
+				{Text[Style["Error Cases : ", Darker@Red]], j}
+			},
+				Alignment -> Left,
+				Dividers -> Center
+			]
+		]
+	];
+	Echo[Quantity[Total[ans[[All, 1, 2]]] / Total[ans[[All, 1, 1]]], "Kilobytes" / "Seconds"], "Speed: "];
+	<|"Failed" -> Flatten[ans[[All, -1]]]|>
 ];
-DistributeDefinitions[VideoIDsInsertDB];
+
 End[];
