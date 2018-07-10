@@ -1,14 +1,43 @@
+(* ::Package:: *)
+(* ::Title:: *)
+(*Example(样板包)*)
+(* ::Subchapter:: *)
+(*程序包介绍*)
+(* ::Text:: *)
+(*Mathematica Package*)
+(*Created by Mathematica Plugin for IntelliJ IDEA*)
+(*Establish from GalAster's template*)
+(**)
+(* ::Text:: *)
+(*Author:我是作者*)
+(*Creation Date:我是创建日期*)
+(*Copyright: Mozilla Public License Version 2.0*)
+(* ::Program:: *)
+(*1.软件产品再发布时包含一份原始许可声明和版权声明。*)
+(*2.提供快速的专利授权。*)
+(*3.不得使用其原始商标。*)
+(*4.如果修改了源代码，包含一份代码修改说明。*)
+(**)
+(* ::Text:: *)
+(*这里应该填这个函数的介绍*)
+(* ::Section:: *)
+(*函数说明*)
 VideoSectionQ::usage = "";
 VideoSection::usage = "";
 VideoIDsRange::usage = "遍历所有ID";
 VideoIDsList::usage = "遍历指定ID";
 VideoIDsPack::usage = "打包缓存";
 VideoIDsInsertDB::usage = "插入数据库";
+(* ::Section:: *)
+(*程序包正体*)
+(* ::Subsection::Closed:: *)
+(*主设置*)
 Begin["`Video`"];
-
+(* ::Subsection:: *)
+(*功能块 2*)
 timeLeft[start_, frac_] := With[{past = AbsoluteTime[] - start}, If[frac == 0 || past < 1, "-", Floor[past / frac - past]]];
-
-
+(* ::Subsection:: *)
+(*功能块 2*)
 VideoSectionQ = MemberQ[$APIs["RidList"] // Keys // Rest, #]&;
 VideoSection[id_Integer] := Module[
 	{get = URLExecute[$APIs["VideoSection"][id], "RawJson"]},
@@ -23,7 +52,8 @@ VideoSection[id_Integer] := Module[
 
 
 
-
+(* ::Subsection:: *)
+(*功能块 2*)
 Options[DownloadIDsRange] = {
 	"Path" -> FileNameJoin[{$BilibiliLinkData, "VideoDataRaw"}],
 	"Overwrite" -> False,
@@ -88,7 +118,8 @@ VideoIDsRange[max_Integer : 0, OptionsPattern[]] := Module[
 	|>]
 ];
 DistributeDefinitions[VideoIDsRange];
-
+(* ::Subsection:: *)
+(*功能块 2*)
 Options[DownloadIDsList] = {
 	"Path" -> FileNameJoin[{$BilibiliLinkData, "VideoDataRaw"}],
 	"Overwrite" -> False,
@@ -145,7 +176,8 @@ DistributeDefinitions[VideoIDsList];
 
 
 
-
+(* ::Subsection:: *)
+(*功能块 2*)
 VideoIdsFormat[asc_] := <|
 	"VideoID" -> asc["aid"],
 	"Title" -> asc["title"],
@@ -165,7 +197,8 @@ VideoIdsFormat[asc_] := <|
 	"Comment" -> asc["stat", "reply"],
 	"HighestRank" -> asc["stat", "his_rank"]
 |>;
-
+(* ::Subsection:: *)
+(*功能块 2*)
 Options[VideoIDsPack] = {
 	"Pack" -> 1000,
 	"Path" -> FileNameJoin[{$BilibiliLinkData, "VideoDataRaw"}],
@@ -188,26 +221,9 @@ VideoIDsPack[dir_String, ops : OptionsPattern[]] := Block[
 	MapIndexed[AbsoluteTiming@VideoIDsPack[#, ops]&, Partition[all, UpTo[OptionValue["Pack"]]]]
 ];
 
-VideoIdsFormat[asc_] := <|
-	"VideoID" -> asc["aid"],
-	"Title" -> asc["title"],
-	"Date" -> FromUnixTime[asc["pubdate"]],
-	"Length" -> asc["duration"],
-	"Pages" -> asc["videos"],
-	"Region" -> asc["tid"],
-	"CID" -> asc["cid"],
-	"OwnerID" -> asc["owner", "mid"],
-	"OwnerName" -> asc["owner", "name"],
-	"View" -> asc["stat", "view"],
-	"Favorite" -> asc["stat", "favorite"],
-	"Coin" -> asc["stat", "coin"],
-	"Share" -> asc["stat", "share"],
-	"Like" -> asc["stat", "like"],
-	"Dislike" -> asc["stat", "dislike"],
-	"Comment" -> asc["stat", "reply"],
-	"HighestRank" -> asc["stat", "his_rank"]
-|>;
 
+(* ::Subsection:: *)
+(*功能块 2*)
 VideoIDsInsertPack[fs_, co_] := Block[
 	{in = Select[Flatten[Import /@ fs], AssociationQ]},
 	MongoLink`MongoCollectionInsert[co, Map[VideoIdsFormat, in] /. Missing[__] :> ""];
@@ -215,7 +231,7 @@ VideoIDsInsertPack[fs_, co_] := Block[
 ] // AbsoluteTiming;
 Options[VideoIDsInsertDB] = {"BatchSize" -> 1};
 VideoIDsInsertDB[dir_String, db_, OptionsPattern[]] := Block[
-	{client, all, pt, tasks, ans, i = 0, j = 0},
+	{client, all, pt, tasks, ans, i = 0, j = 0, now =Now},
 	all = SortBy[FileNames[{"*.WXF", "*.Json"}, dir], ToExpression[StringSplit[#, {"\\", "-"}][[-2]]]&];
 	pt = Partition[all, UpTo[OptionValue["BatchSize"]]];
 	ans = With[
@@ -227,7 +243,10 @@ VideoIDsInsertDB[dir_String, db_, OptionsPattern[]] := Block[
 			]& , pt],
 			Grid[{
 				{Text[Style["Transforming :", Darker@Blue]], ProgressIndicator[i, {0, Length[pt]}]},
-				{Text[Style["Error Cases : ", Darker@Red]], j}
+				{
+					Text[Style["Error Cases : ", Darker@Red]],
+					StringJoin[ToString/@{j,"   --- Time Left: ",timeLeft[AbsoluteTime[now], (i+j )/ Length[pt]]}]
+				}
 			},
 				Alignment -> Left,
 				Dividers -> Center
@@ -238,4 +257,10 @@ VideoIDsInsertDB[dir_String, db_, OptionsPattern[]] := Block[
 	<|"Failed" -> Flatten[ans[[All, -1]]]|>
 ];
 
-End[];
+(* ::Subsection::Closed:: *)
+(*附加设置*)
+SetAttributes[
+	{ },
+	{Protected,ReadProtected}
+];
+End[]
