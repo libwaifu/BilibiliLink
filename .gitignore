@@ -1,5 +1,18 @@
-# idea 配置文件
+# Idea Project
 *.iml
-.idea/*
+.idea/
 
+# yarn
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build Temp
+.DS_Store
+dist/
+demo/
+
+
+# Notebook
 *.nb

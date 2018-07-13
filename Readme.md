@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/Moe-Net/BilibiliLink.svg?branch=master)](https://travis-ci.org/Moe-Net/BilibiliLink)
 [![Mathematica](https://img.shields.io/badge/Mathematica-%3E%3D11.3-brightgreen.svg)](https://www.wolfram.com/mathematica/)
-[![Release Vision](https://img.shields.io/badge/release-v0.3.x-ff69b4.svg)](https://github.com/Moe-Net/BilibiliLink/releases)
+[![Release Vision](https://img.shields.io/badge/release-v0.4.x-ff69b4.svg)](https://github.com/Moe-Net/BilibiliLink/releases)
 [![Repo Size](https://img.shields.io/github/repo-size/Moe-Net/BilibiliLink.svg)](https://github.com/Moe-Net/BilibiliLink.git)
 
 ![](https://i.loli.net/2018/05/20/5b0170b1f1494.png)
@@ -18,8 +18,8 @@ BilibiliLink 提供了一系列获取B站数据的方法, 计划中的内容有,
 
 第一条命令安装, 第二条命令更新, 第三条命令卸载
 ```mma
-PacletInstall["BilibilliLink","Site"->"http://math.owo.site/"]
-PacletUpdate["BilibilliLink","Site"->"http://math.owo.site/"]
+PacletInstall["BilibilliLink","Site"->"http://m.vers.site/"]
+PacletUpdate["BilibilliLink","Site"->"http://m.vers.site/"]
 PacletUninstall["BilibilliLink"]
 ```
 
@@ -45,7 +45,7 @@ link["Markdown"]
 1. 任何创意欢迎 git pull request, 或联系知乎[酱紫君](https://www.zhihu.com/people/GalAster).
 2. 任何的意见和建议, 提交 github issue 或者加QQ群1014125反馈.
 
-|知乎主页|QQ群聊| 
+|知乎主页|QQ群聊|
 |:-:|:-:|
 |[<img src="https://raw.githubusercontent.com/GalAster/Deus/master/Resources/pic/Logo_Zhihu.png" alt="知乎链接" width = "100" align=center />](https://www.zhihu.com/people/GalAster)|[<img src="https://raw.githubusercontent.com/GalAster/Deus/master/Resources/pic/Logo_QQ.png" alt="QQ链接" width = "100" align=center />](https://jq.qq.com/?_wv=1027&k=5BqFya1)
 
