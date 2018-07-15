@@ -25,18 +25,19 @@ script:
   - nVer=`echo $ver | awk -F. '{printf "%s.%s.%s\n",$1,$2,$3+1}'`
   - echo $ver
 before_deploy:
-  - rm -rf .git
-  - rm -rf Documentation
-  - rm -rf Packages/_*
+  - rm -rf .git*
+  - rm -rf docs
+  - rm -rf .travis.yml
   - cd ..
-  - tar -cJf ${GITHUB_REPO}.tar.xz ${GITHUB_REPO}
+  - zip -r ${GITHUB_REPO}.zip ${GITHUB_REPO}
+  - mv ${GITHUB_REPO}.zip ${GITHUB_REPO}-nVer.paclet
 deploy:
   provider: releases
   api_key:
     secure: ${TRAVIS_KEY}
   name: AutoBuild-$nVer
   file:
-    - ${GITHUB_REPO}.tar.xz
+    - ${GITHUB_REPO}-nVer.paclet
   skip_cleanup: true
   on:
     repo: ${GITHUB_USER}/${GITHUB_REPO}
