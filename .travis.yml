@@ -28,16 +28,16 @@ before_deploy:
   - rm -rf .git*
   - rm -rf docs
   - rm -rf .travis.yml
-  - cd ..
-  - zip -r ${GITHUB_REPO}.zip ${GITHUB_REPO}
-  - mv ${GITHUB_REPO}.zip ${GITHUB_REPO}-nVer.paclet
+  - ls && cd ..
+  - tar -cJf ${GITHUB_REPO}.tar.xz ${GITHUB_REPO}
+  - ls
 deploy:
   provider: releases
   api_key:
     secure: ${TRAVIS_KEY}
   name: AutoBuild-$nVer
   file:
-    - ${GITHUB_REPO}-nVer.paclet
+    - ${GITHUB_REPO}.tar.xz
   skip_cleanup: true
   on:
     repo: ${GITHUB_USER}/${GITHUB_REPO}
