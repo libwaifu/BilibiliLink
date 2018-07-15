@@ -1,5 +1,8 @@
+# PhotosMethods
+
+
 ## PhotosRange
-参数: list, 从一个pid列表中获取数据. 
+参数: list, 从一个pid列表中获取数据.
 
 返回: AlbumObject对象
 

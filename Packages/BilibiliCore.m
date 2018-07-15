@@ -1,5 +1,5 @@
 AbortableMap::usage = "";
-Begin["`Functions`"]
+Begin["`Functions`"];
 timeLeft[start_, frac_] := With[{past = AbsoluteTime[] - start}, If[frac == 0 || past < 1, "-", Floor[past / frac - past]]];
 AbortableMap[func_, list_, ker_ : $KernelCount] := DynamicModule[
 	{len, bag, size, lastresults, starttime, n, results, t},

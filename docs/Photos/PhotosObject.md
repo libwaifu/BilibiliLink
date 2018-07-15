@@ -1,2 +1,0 @@
-
-现在名为BilibiliAlbumObject

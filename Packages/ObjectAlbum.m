@@ -5,8 +5,8 @@ BilibiliAlbumObjectQ::usage = "BilibiliAlbumObject 合法性检测";
 BilibiliAlbumObjectQ[asc_?AssociationQ] := AllTrue[{"Count", "Date"}, KeyExistsQ[asc, #]&];
 BilibiliAlbumObjectQ[_] := False;
 
-Format[BilibiliDownloadObject[___], OutputForm] := "BilibiliDownloadObject[>_<]";
-Format[BilibiliDownloadObject[___], InputForm] := "BilibiliDownloadObject[>_<]";
+Format[BilibiliAlbumObjectQ[___], OutputForm] := "BilibiliDownloadObject[>_<]";
+Format[BilibiliAlbumObjectQ[___], InputForm] := "BilibiliDownloadObject[>_<]";
 BilibiliAlbumObject /: MakeBoxes[obj : BilibiliAlbumObject[asc_?BilibiliAlbumObjectQ], form : (StandardForm | TraditionalForm)] := Module[
 	{above, below},
 	above = {

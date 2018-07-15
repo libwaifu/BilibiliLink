@@ -10,7 +10,7 @@ PacletUninstall["BilibilliLink"]
 SystemOpen[FileNameJoin@{$UserBaseDirectory, "Applications"}]
 ```
 接着使用git下载以下, 或任意fork项目即可
-```shell
+```bash
 git clone git@github.com:Moe-Net/BilibiliLink.git --depth 1
 ```
 
