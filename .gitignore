@@ -10,8 +10,7 @@ yarn-error.log*
 
 # Build Temp
 .DS_Store
-dist/
-demo/
+docs/.build/
 
 
 # Notebook

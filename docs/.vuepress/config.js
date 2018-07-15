@@ -1,5 +1,5 @@
 module.exports = {
-	dest: 'BBLink',
+	dest: 'docs/.build',
 	locales: {
 		'/': {
 			lang: 'zh-CN',

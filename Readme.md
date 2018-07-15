@@ -13,6 +13,8 @@ BilibiliLink 提供了一系列获取B站数据的方法, 计划中的内容有,
 
 但并非所有页面上的东西都能获得, 有些看着是文字, 其实是图片, 那就没法抓取了.
 
+[详细文档](https://bilibililink.netlify.com/)
+
 ## Install
 ![](https://i.loli.net/2018/05/20/5b0170a0f01f9.png)
 

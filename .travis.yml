@@ -13,6 +13,7 @@ env:
    # 还有一个 TRAVIS_KEY 填在 travis settings 里!
    # 教程: https://github.com/settings/tokens
 before_script:
+  - ls -all -l
   - git config --global user.name "${GITHUB_NAME}"
   - git config --global user.email "${GITHUB_MAIL}"
   - export TZ='Asia/Shanghai'
@@ -23,21 +24,23 @@ script:
   - cd ${GITHUB_REPO}
   - ver=`git tag | awk 'END {print}'`
   - nVer=`echo $ver | awk -F. '{printf "%s.%s.%s\n",$1,$2,$3+1}'`
-  - echo $ver
+  - echo $nVer
 before_deploy:
-  - rm -rf .git*
+  - rm -rf .*
+  - rm -rf *.json
+  - rm -rf yarn.lock
   - rm -rf docs
-  - rm -rf .travis.yml
-  - ls && cd ..
+  - ls -all -l
+  - cd ..
   - tar -cJf ${GITHUB_REPO}.tar.xz ${GITHUB_REPO}
   - ls
 deploy:
   provider: releases
-  api_key:
-    secure: ${TRAVIS_KEY}
+  api_key: ${TRAVIS_KEY}
   name: AutoBuild-$nVer
+  skip_cleanup: true
   file:
     - ${GITHUB_REPO}.tar.xz
-  skip_cleanup: true
+  prerelease: true
   on:
-    repo: ${GITHUB_USER}/${GITHUB_REPO}
+    tags: true
