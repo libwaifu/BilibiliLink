@@ -10,29 +10,29 @@ env:
    # 还有一个 TRAVIS_KEY 填在 travis settings 里!
    # 教程: https://github.com/settings/tokens
 before_script:
-  - ls -all -l
+  - export TZ='Asia/Shanghai'
   - git config --global user.name "${GITHUB_NAME}"
   - git config --global user.email "${GITHUB_MAIL}"
-  - export TZ='Asia/Shanghai'
-  - git tag "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
+  - git tag -a "$nVer" -m "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
 script:
-  # 记录搜索深度 10
+  # 使用要求 10 次提交之类有 tag 存在, 名称必须为 v1.0.0 类似的形式
   - git clone --depth 10 --branch master --single-branch https://github.com/${GITHUB_USER}/${GITHUB_REPO}
   - cd ${GITHUB_REPO}
   - ver=`git tag | awk 'END {print}'`
   - nVer=`echo $ver | awk -F. '{printf "%s.%s.%s\n",$1,$2,$3+1}'`
   - echo $nVer
 before_deploy:
-  - rm -rf .git*
-  - rm -rf .editorconfig
-  - rm -rf .travis.yml
-  - rm -rf *.json
-  - rm -rf yarn.lock
+  # 清理工程文件
   - rm -rf docs
-  - ls -all -l
-  - cd ..
+  - rm -f .git*
+  - rm -f .editorconfig
+  - rm -f .travis.yml
+  - rm -f *.json
+  - rm -f yarn.lock
+  # 清理文档(可选)
+  # - rm -rf Documentation
+  - ls && cd ..
   - tar -cJf ${GITHUB_REPO}.tar.xz ${GITHUB_REPO}
-  - ls
 deploy:
   provider: releases
   api_key: ${TRAVIS_KEY}

@@ -3,8 +3,8 @@ IndexIcon::usage = "xxx";
 ErrorPage::usage = "xxx";
 HeaderBanner::usage = "xxx";
 HeaderLogo::usage = "xxx";
-BilibiliLink`§DDOS::usage = "";
-BilibiliLink`§DDOS[___] := "";
+BilibiliLink`ㄑDDOS::usage = "";
+BilibiliLink`ㄑDDOS[___] := "";
 Begin["`DDOS`"];
 VipEmojiReshape[line_] := Block[
 	{drop = KeyDrop[line["emojis"], {"state", "remark"}]},
@@ -161,5 +161,10 @@ HeaderLogo[___, OptionsPattern[]] := Block[
 		"Path" -> OptionValue[Path],
 		"Size" -> 17955498.
 	|>]
+];
+
+SetAttributes[
+	{},
+	{Protected, ReadProtected}
 ];
 End[]

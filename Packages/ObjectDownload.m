@@ -9,8 +9,8 @@ BilibiliDownloadObject::usage = ToString[Column[{
 	"\tm: MarkDown",
 	"\tdo: Download - BilibiliDownload"
 }],StandardForm];
-BilibiliLink`§Download::usage = "";
-BilibiliLink`§Download[___] := "";
+BilibiliLink`ㄑDownload::usage = "";
+BilibiliLink`ㄑDownload[___] := "";
 Begin["`Object`"];
 BilibiliDownloadObjectQ::usage = "BilibiliDownloadObject 合法性检测";
 BilibiliDownloadObjectQ[asc_?AssociationQ] := AllTrue[{"Path", "Data"}, KeyExistsQ[asc, #]&];
@@ -85,5 +85,8 @@ BilibiliDownload[ass_, OptionsPattern[]] := Block[
 ];
 
 
-
+SetAttributes[
+	{},
+	{Protected, ReadProtected}
+];
 End[]

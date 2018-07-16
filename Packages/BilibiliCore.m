@@ -1,6 +1,6 @@
 AbortableMap::usage = "";
-BilibiliLink`§Functions::usage = "";
-BilibiliLink`§Functions[___] := "";
+BilibiliLink`ㄑFunctions::usage = "";
+BilibiliLink`ㄑFunctions[___] := "";
 Begin["`Functions`"];
 timeLeft[start_, frac_] := With[{past = AbsoluteTime[] - start}, If[frac == 0 || past < 1, "-", Floor[past / frac - past]]];
 AbortableMap[func_, list_, ker_ : $KernelCount] := DynamicModule[
@@ -41,5 +41,9 @@ WriteCSV[file_String, matrix_] := With[
 		]) ~ Join ~ {FortranForm[#[[len]]]}]&, matrix
 	];
 	Close[str];
+];
+SetAttributes[
+	{},
+	{Protected, ReadProtected}
 ];
 End[]

@@ -3,8 +3,8 @@ PhotosRange::usage = "";
 PhotosHot::usage = "";
 PhotosNew::usage = "";
 PhotosRank::usage = "";
-BilibiliLink`§Photo::usage = "";
-BilibiliLink`§Photo[___] := "";
+BilibiliLink`ㄑPhoto::usage = "";
+BilibiliLink`ㄑPhoto[___] := "";
 Begin["`Photo`"];
 $PhotoKeyMap = <|
 	1 -> <|"Name" -> "插画", "Alias" -> "Illustration", "Key" -> "illustration", "Url" -> "https://h.bilibili.com/eden/draw_area#/illustration"|>,
@@ -287,5 +287,8 @@ PhotosRank[typenum_, OptionsPattern[]] := Module[
 	|>]
 ];
 
-
+SetAttributes[
+	{},
+	{Protected, ReadProtected}
+];
 End[]

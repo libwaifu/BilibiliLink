@@ -1,6 +1,6 @@
 PhotosHelp::usage = "xxx";
-BilibiliLink`§UI::usage = "";
-BilibiliLink`§UI[___] := "";
+BilibiliLink`ㄑUI::usage = "";
+BilibiliLink`ㄑUI[___] := "";
 Begin["`UI`"];
 
 
@@ -97,5 +97,8 @@ PhotosHelp[___] := Module[
 
 
 
-
+SetAttributes[
+	{},
+	{Protected, ReadProtected}
+];
 End[]

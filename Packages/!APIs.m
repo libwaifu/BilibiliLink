@@ -1,6 +1,6 @@
 $BilibiliLinkUA::usage = "";
-BilibiliLink`§APIs::usage = "";
-BilibiliLink`§APIs[___] := "";
+BilibiliLink`ㄑAPIs::usage = "";
+BilibiliLink`ㄑAPIs[___] := "";
 Begin["`APIs`"];
 
 

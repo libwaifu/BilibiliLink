@@ -131,4 +131,11 @@ AlbumDownload[ass_, OptionsPattern[]] := Module[
 		"Size" -> ass["Size"]
 	|>]
 ];
+
+
+
+SetAttributes[
+	{},
+	{Protected, ReadProtected}
+];
 End[]

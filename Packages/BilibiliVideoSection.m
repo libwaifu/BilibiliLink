@@ -30,8 +30,8 @@ VideoIDsInsertDB::usage = "插入数据库";
 (*程序包正体*)
 (* ::Subsection::Closed:: *)
 (*主设置*)
-BilibiliLink`§Video::usage = "";
-BilibiliLink`§Video[___] := "";
+BilibiliLink`ㄑVideo::usage = "";
+BilibiliLink`ㄑVideo[___] := "";
 Begin["`Video`"];
 (* ::Subsection:: *)
 (*功能块 2*)
