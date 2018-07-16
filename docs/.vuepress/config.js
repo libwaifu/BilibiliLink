@@ -20,7 +20,8 @@ module.exports = {
 				title: '简介',
 				children: [
 					'/Start/',
-					'/Start/Design.md'
+					'/Start/Design.md',
+					'/Start/Guide.md'
 				]
 			},
 			{

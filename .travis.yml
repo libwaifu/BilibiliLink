@@ -1,8 +1,5 @@
 sudo: required
 dist: trusty
-branches:
-  only:
-    - master
 # 只需要自定义下面五个量
 env:
  global:
@@ -26,7 +23,9 @@ script:
   - nVer=`echo $ver | awk -F. '{printf "%s.%s.%s\n",$1,$2,$3+1}'`
   - echo $nVer
 before_deploy:
-  - rm -rf .*
+  - rm -rf .git*
+  - rm -rf .editorconfig
+  - rm -rf .travis.yml
   - rm -rf *.json
   - rm -rf yarn.lock
   - rm -rf docs
