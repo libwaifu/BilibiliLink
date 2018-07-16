@@ -31,6 +31,12 @@ module.exports = {
 				]
 			},
 			{
+				title: '小功能',
+				children: [
+					'/Toys/'
+				]
+			},
+			{
 				title: '全站爬虫',
 				children: [
 					'/Crawler/',
