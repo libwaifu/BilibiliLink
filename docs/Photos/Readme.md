@@ -1,34 +1,62 @@
-## Install
-
-如果你是开发者, 那么按照如下方式安装, 同时卸载用户版, 以免造成干扰.
-
-接着打开如下或任意 `$Path` 目录
-```mma
-PacletUninstall["BilibilliLink"]
-SystemOpen[FileNameJoin@{$UserBaseDirectory, "Applications"}]
-```
-接着使用git下载以下, 或任意fork项目即可
-```sh
-git clone git@github.com:Moe-Net/BilibiliLink.git --depth 1
-```
-
-使用 `git pull` 同步, 使用`rm -rf BilibiliLink`命令删除即可卸载.
-
-### Encoding
-
-在开始一切之前, 请务必检查编码, 运行如下代码自动纠正编码.
-
-```mma
-If[$CharacterEncoding=!="UTF-8",
-	$CharacterEncoding="UTF-8";
-	Print[{
-		Style["$CharacterEncoding has changed to UTF-8 to avoid problems.",Red],
-		Style["Because BilibiliLink only works under UTF-8"]
-	}//TableForm];
-	st=OpenAppend[FindFile["init.m"]];
-	WriteString[st,"$CharacterEncoding=\"UTF-8\";"];
-	Close[st];
-];
-```
+# Functions
 
 
+## PhotosRange
+参数: list, 从一个pid列表中获取数据.
+
+返回: AlbumObject对象
+
+简写: 单个整数n表示`Range[1,n]`, 两个整数n则表示`Range[a,b]`
+
+### 选项:
+- RawData->False
+    - 是否不转化为AlbumObject而返回接受到的原始数据
+---
+## PhotosIndex
+1. 参数: 无
+获得画友首页的推荐拼图
+2. 返回: AlbumObject对象
+
+**无选项**
+
+## PhotosNew
+- 参数: `Integer`
+
+- 返回: `BilibiliAlbumObject`
+
+- 选项
+ - UpTo: `100`
+ - Count: `False`
+ - All: `False`
+严重bug, 勿用
+ - RawData `False`
+Debug , 不转换生成 Object, 直接返回原始读入.
+
+## PhotosHot
+
+
+## PhotosRank
+
+## PhotosRecommend
+
+## PhotosTag
+
+## PhotosAuthor
+
+## PhotosSearch
+
+## PhotosTrace
+
+## PhotosDetail
+
+
+
+
+具体实现参考 https://github.com/Moe-Net/BilibiliLink/issues/7
+
+
+### Bug
+
+![](/Readme/20180715090728449.png)
+
+已知错误

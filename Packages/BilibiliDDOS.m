@@ -3,6 +3,8 @@ IndexIcon::usage = "xxx";
 ErrorPage::usage = "xxx";
 HeaderBanner::usage = "xxx";
 HeaderLogo::usage = "xxx";
+BilibiliLink`§DDOS::usage = "";
+BilibiliLink`§DDOS[___] := "";
 Begin["`DDOS`"];
 VipEmojiReshape[line_] := Block[
 	{drop = KeyDrop[line["emojis"], {"state", "remark"}]},

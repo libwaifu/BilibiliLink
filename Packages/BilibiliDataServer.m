@@ -1,6 +1,8 @@
 $BilibiliDataServer::usage = "远程数据服务器";
-
-Begin["`Server`"];
+AbortableMap::usage = "";
+BilibiliLink`§Remote::usage = "";
+BilibiliLink`§Remote[___] := "";
+Begin["`Remote`"];
 $BilibiliDataServer = "https://m.vers.site";
 
 End[]

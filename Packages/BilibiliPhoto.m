@@ -3,6 +3,8 @@ PhotosRange::usage = "";
 PhotosHot::usage = "";
 PhotosNew::usage = "";
 PhotosRank::usage = "";
+BilibiliLink`§Photo::usage = "";
+BilibiliLink`§Photo[___] := "";
 Begin["`Photo`"];
 $PhotoKeyMap = <|
 	1 -> <|"Name" -> "插画", "Alias" -> "Illustration", "Key" -> "illustration", "Url" -> "https://h.bilibili.com/eden/draw_area#/illustration"|>,
@@ -198,7 +200,7 @@ PhotosNew[typenum_, OptionsPattern[]] := Module[
 	];
 	If[OptionValue[All],
 		all = ToString[PhotosNewFindMax[$PhotoKeyMap[typenum]["Key"]]];
-		map = Table[api[<|"p" -> i|>], {i, 0, Quotient[all - 1, 20]}],
+		map = Table[api[<|"p" -> i|>], {i, 0, Quotient[ToExpression[all] - 1, 20]}],
 		map = Table[api[<|"p" -> i|>], {i, 0, Quotient[OptionValue[UpTo] - 1, 20]}]
 	];
 	raw = Flatten[URLExecute[#, "RawJSON"]["data", "items"]& /@ map];

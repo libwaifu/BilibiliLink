@@ -1,4 +1,6 @@
 BilibiliAlbumObject::usage = "内部函数, 图片地址对象.";
+BilibiliLink`§Album::usage = "";
+BilibiliLink`§Album[___] := "";
 Begin["`Object`"];
 (*BilibiliAlbumObject*)
 BilibiliAlbumObjectQ::usage = "BilibiliAlbumObject 合法性检测";

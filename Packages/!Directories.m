@@ -1,6 +1,8 @@
 $BilibiliLinkDirectory::usage = "BilibiliLink 的安装路径.";
 $BilibiliLinkIcons::usage = "BilibiliLink 的图标映射.";
 $BilibiliLinkData::usage = "BilibiliLink 的数据存放位置.";
+BilibiliLink`§Directories::usage = "";
+BilibiliLink`§Directories[___] := "";
 Begin["`Directories`"];
 
 

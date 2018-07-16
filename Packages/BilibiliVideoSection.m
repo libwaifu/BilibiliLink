@@ -18,8 +18,6 @@
 (*3.不得使用其原始商标。*)
 (*4.如果修改了源代码，包含一份代码修改说明。*)
 (**)
-(* ::Text:: *)
-(*这里应该填这个函数的介绍*)
 (* ::Section:: *)
 (*函数说明*)
 VideoSectionQ::usage = "";
@@ -32,6 +30,8 @@ VideoIDsInsertDB::usage = "插入数据库";
 (*程序包正体*)
 (* ::Subsection::Closed:: *)
 (*主设置*)
+BilibiliLink`§Video::usage = "";
+BilibiliLink`§Video[___] := "";
 Begin["`Video`"];
 (* ::Subsection:: *)
 (*功能块 2*)

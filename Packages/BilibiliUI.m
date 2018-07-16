@@ -1,4 +1,6 @@
 PhotosHelp::usage = "xxx";
+BilibiliLink`§UI::usage = "";
+BilibiliLink`§UI[___] := "";
 Begin["`UI`"];
 
 

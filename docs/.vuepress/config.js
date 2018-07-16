@@ -24,6 +24,13 @@ module.exports = {
 				]
 			},
 			{
+				title: '画友站',
+				children: [
+					'/Photos/',
+					'/Photos/Object.md'
+				]
+			},
+			{
 				title: '全站爬虫',
 				children: [
 					'/Crawler/',

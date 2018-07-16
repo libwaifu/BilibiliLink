@@ -1,4 +1,6 @@
 BilibiliVideoSectionObject::usage = "";
+BilibiliLink`§VideoSectionObject::usage = "";
+BilibiliLink`§VideoSectionObject[___] := "";
 Begin["`Object`"];
 BilibiliVideoSectionObjectQ::usage = "BilibiliVideoSectionObject 合法性检测";
 BilibiliVideoSectionObjectQ[asc_?AssociationQ] := AllTrue[{"Me", "Parent", "Count", "Date"}, KeyExistsQ[asc, #]&];
