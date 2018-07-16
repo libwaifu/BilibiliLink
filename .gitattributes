@@ -1,9 +1,9 @@
 * text=auto
 # 屏蔽文档与 build 文件统计
-Documentation/* linguist-documentation
+Documentation/ linguist-documentation
 # make things fun, lol
 *.md linguist-language=vue
 *.wl linguist-language=bash
-Config/*.m linguist-language=perl
+Config/ linguist-language=perl
 BilibiliLinkLoader.m linguist-language=ruby
-Packages/__Future__/*.m linguist-language=mercury
+Packages/__Dev/*.m linguist-language=mercury

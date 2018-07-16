@@ -46,17 +46,17 @@ IndexIcon[___, OptionsPattern[]] := Block[
 IndexIcon["Raw"] := URLExecute["https://www.bilibili.com/index/index-icon.json", "RawJSON"]["fix"];
 tsLine[doc_] := {
 	"#### Title: " <> doc["id"] <> "_" <> doc["title"],
-	"##### Time: " <> DateString[FromUnixTime[ToExpression@doc["sttime"]]],
+	"##### Date: " <> DateString[FromUnixTime[ToExpression@doc["sttime"]]],
 	"##### Link: " <> StringDelete[URLDecode@URLDecode@First@doc["links"], " "],
 	"![" <> First@doc["links"] <> "](https:" <> doc["icon"] <> ")",
 	"---"
 };
 IndexIcon["Markdown", OptionsPattern[]] := Block[
 	{get = IndexIcon["Raw"], file = OptionValue[Path], name},
-	name = FileNameJoin[{file, "Readme.md"}];
+	name = FileNameJoin[{file, "IndexIcon.md"}];
 	If[!FileExistsQ[file], CreateFile[file]];
 	If[FileExistsQ[name], DeleteFile[name]];
-	Export[name, StringJoin@Riffle[Flatten[tsLine /@ SortBy[get, #["id"]&]], "\r"], "Text"]
+	Export[name, StringJoin@Riffle[Flatten[tsLine /@ SortBy[get, ToExpression[#["id"]]&]], "\r"], "Text"]
 ];
 
 

@@ -42,5 +42,3 @@ deploy:
   file:
     - ${GITHUB_REPO}.tar.xz
   prerelease: true
-  on:
-    tags: true
