@@ -1,8 +1,32 @@
-$BilibiliDataServer::usage = "远程数据服务器";
-AbortableMap::usage = "";
-BilibiliLink`§Remote::usage = "";
-BilibiliLink`§Remote[___] := "";
+$BilibiliServer::usage = "远程数据服务器";
+BilibiliLink`ㄑRemote::usage = "";
+BilibiliLink`ㄑRemote[___] := "";
+Needs["MongoLink`"];
 Begin["`Remote`"];
-$BilibiliDataServer = "https://m.vers.site";
+$BilibiliServer = "https://m.vers.site";
+$DatabaseServer = "mongodb://biliman:readonly@45.32.68.44:37017/bilispider";
+DatabaseClient=MongoLink`MongoConnect["mongodb://biliman:readonly@45.32.68.44:37017/bilispider"];
+TracedMemberDB=MongoLink`MongoGetCollection[DatabaseClient,"bilispider","trace_menber_info"];
+TracedVideoDB=MongoLink`MongoGetCollection[DatabaseClient,"bilispider","trace_video_stat"];
 
+
+
+
+
+GetTraceRemote[id_]:=Block[
+	{cursor,data},
+	cursor=MongoLink`MongoCollectionFind[
+		TracedVideoDB,
+		<|"aid"->id|>,
+		<|"_id"->False,"aid"->False|>
+	];
+	data=MongoLink`MongoCursorToArray[cursor]
+];
+
+
+
+SetAttributes[
+	{},
+	{Protected, ReadProtected}
+];
 End[]
