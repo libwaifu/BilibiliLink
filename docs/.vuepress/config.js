@@ -27,8 +27,15 @@ module.exports = {
 			{
 				title: '画友站',
 				children: [
-					'/Photos/',
-					'/Photos/Object.md'
+					'/Photo/',
+					'/Photo/Object.md'
+				]
+			},
+			{
+				title: '视频站',
+				children: [
+					'/Video/',
+					'/Video/Object.md'
 				]
 			},
 			{
