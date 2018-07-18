@@ -5,8 +5,8 @@ Needs["MongoLink`"];
 Begin["`Remote`"];
 $BilibiliServer = "https://m.vers.site";
 $DatabaseServer = "mongodb://biliman:readonly@45.32.68.44:37017/bilispider";
-DatabaseClient=MongoLink`MongoConnect["mongodb://biliman:readonly@45.32.68.44:37017/bilispider"];
-TracedMemberDB=MongoLink`MongoGetCollection[DatabaseClient,"bilispider","trace_menber_info"];
+DatabaseClient=MongoLink`MongoConnect[$DatabaseServer];
+TracedMemberDB=MongoLink`MongoGetCollection[DatabaseClient,"bilispider","trace_member_info"];
 TracedVideoDB=MongoLink`MongoGetCollection[DatabaseClient,"bilispider","trace_video_stat"];
 
 

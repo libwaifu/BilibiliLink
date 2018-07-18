@@ -26,6 +26,7 @@ VideoIDsRange::usage = "遍历所有ID";
 VideoIDsList::usage = "遍历指定ID";
 VideoIDsPack::usage = "打包缓存";
 VideoIDsInsertDB::usage = "插入数据库";
+TagInfo::usage = "TagInfo[id] 获取tag详细信息";
 (* ::Section:: *)
 (*程序包正体*)
 (* ::Subsection::Closed:: *)
@@ -231,7 +232,7 @@ VideoIDsInsertPack[fs_, co_] := Block[
 ] // AbsoluteTiming;
 Options[VideoIDsInsertDB] = {"BatchSize" -> 1};
 VideoIDsInsertDB[dir_String, db_, OptionsPattern[]] := Block[
-	{client, all, pt, tasks, ans, i = 0, j = 0, now =Now},
+	{client, all, pt, tasks, ans, i = 0, j = 0, now = Now},
 	all = SortBy[FileNames[{"*.WXF", "*.Json"}, dir], ToExpression[StringSplit[#, {"\\", "-"}][[-2]]]&];
 	pt = Partition[all, UpTo[OptionValue["BatchSize"]]];
 	ans = With[
@@ -245,7 +246,7 @@ VideoIDsInsertDB[dir_String, db_, OptionsPattern[]] := Block[
 				{Text[Style["Transforming :", Darker@Blue]], ProgressIndicator[i, {0, Length[pt]}]},
 				{
 					Text[Style["Error Cases : ", Darker@Red]],
-					StringJoin[ToString/@{j,"   --- Time Left: ",timeLeft[AbsoluteTime[now], (i+j )/ Length[pt]]}]
+					StringJoin[ToString /@ {j, "   --- Time Left: ", timeLeft[AbsoluteTime[now], (i + j ) / Length[pt]]}]
 				}
 			},
 				Alignment -> Left,
@@ -257,10 +258,47 @@ VideoIDsInsertDB[dir_String, db_, OptionsPattern[]] := Block[
 	<|"Failed" -> Flatten[ans[[All, -1]]]|>
 ];
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TagInfoFormat[asc_] := <|
+	"ID" -> asc["tag_id"],
+	"Name" -> asc["tag_name"],
+	"Detail" -> asc["content"],
+	(*"Icon"->asc["cover"],*)
+	"Date" -> FromUnixTime[asc["ctime"]],
+	"Count" -> asc["count", "use"],
+	"Watch" -> asc["count", "atten"]
+|>;
+TagInfo[id_] := TagInfoFormat[URLExecute["https://api.bilibili.com/x/tag/info?tag_id=" <> ToString[id], "RawJSON"]["data"]];
+
+
+
+
+
+
+
+
+
+
+
+
 (* ::Subsection::Closed:: *)
 (*附加设置*)
 SetAttributes[
 	{ },
-	{Protected,ReadProtected}
+	{Protected, ReadProtected}
 ];
 End[]
