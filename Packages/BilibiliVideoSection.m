@@ -277,11 +277,15 @@ TagInfoFormat[asc_] := <|
 	"ID" -> asc["tag_id"],
 	"Name" -> asc["tag_name"],
 	"Detail" -> asc["content"],
-	(*"Icon"->asc["cover"],*)
 	"Date" -> FromUnixTime[asc["ctime"]],
 	"Count" -> asc["count", "use"],
 	"Watch" -> asc["count", "atten"]
 |>;
+(*
+屏蔽字段
+- tag 图标	"Icon"->asc["cover"]
+- type, 意义不明
+*)
 TagInfo[id_] := TagInfoFormat[URLExecute["https://api.bilibili.com/x/tag/info?tag_id=" <> ToString[id], "RawJSON"]["data"]];
 
 
@@ -297,6 +301,7 @@ TagInfo[id_] := TagInfoFormat[URLExecute["https://api.bilibili.com/x/tag/info?ta
 
 (* ::Subsection::Closed:: *)
 (*附加设置*)
+SetAttributes[{TagInfo}, Listable];
 SetAttributes[
 	{ },
 	{Protected, ReadProtected}

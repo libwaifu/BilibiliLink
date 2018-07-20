@@ -48,7 +48,8 @@ module.exports = {
 				title: '全站爬虫',
 				children: [
 					'/Crawler/',
-					'/Crawler/Video.md'
+					'/Crawler/Video.md',
+					'/Crawler/Tag.md'
 
 				]
 			}

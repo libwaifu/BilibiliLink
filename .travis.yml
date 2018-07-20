@@ -13,7 +13,6 @@ before_script:
   - export TZ='Asia/Shanghai'
   - git config --global user.name "${GITHUB_NAME}"
   - git config --global user.email "${GITHUB_MAIL}"
-  - git tag -a "$nVer" -m "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
 script:
   # 使用要求 10 次提交之类有 tag 存在, 名称必须为 v1.0.0 类似的形式
   - git clone --depth 10 --branch master --single-branch https://github.com/${GITHUB_USER}/${GITHUB_REPO}
@@ -21,7 +20,10 @@ script:
   - ver=`git tag | awk 'END {print}'`
   - nVer=`echo $ver | awk -F. '{printf "%s.%s.%s\n",$1,$2,$3+1}'`
   - echo $nVer
+  - cd ..
 before_deploy:
+  - git tag -a "$nVer" -m "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
+  - cd ${GITHUB_REPO}
   # 清理工程文件
   - rm -rf docs
   - rm -f .git*
