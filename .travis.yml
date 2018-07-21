@@ -26,7 +26,8 @@ before_deploy:
   - cd ${GITHUB_REPO}
   # 清理工程文件
   - rm -rf docs
-  - rm -f .git*
+  - rm -f .gitignore
+  - rm -f .gitattributes
   - rm -f .editorconfig
   - rm -f .travis.yml
   - rm -f *.json
