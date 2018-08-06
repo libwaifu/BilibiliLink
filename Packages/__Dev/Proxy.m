@@ -15,6 +15,13 @@
 BeginPackage["Proxy`"]
 (* Exported symbols added here with SymbolName::usage *)
 
+
+TagURL[id_] := HTTPRequest[
+	"http://api.bilibili.com/tags/info_description?id=" <> ToString[id],
+	TimeConstraint -> 5
+];
+
+
 Begin["`Private`"]
 TagFormat[asc_] := <|
 	"ID" -> asc["tag_id"],
