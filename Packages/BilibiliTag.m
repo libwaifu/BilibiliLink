@@ -9,25 +9,26 @@ Begin["`Tag`"];
 
 
 TagURL[tid_] := HTTPRequest[
-	"http://api.bilibili.com/tags/info_description?id=" <> ToString[tid],
+	"https://api.bilibili.com/x/tag/info?tag_id=" <> ToString[tid],
 	TimeConstraint -> 5
 ];
 TagGetQ[get_] := Or[FailureQ@get, get["code"] != 0];
 TagFormat[asc_] := <|
 	"ID" -> asc["tag_id"],
-	"Name" -> asc["name"],
-	"Count" -> asc["visit_count"],
-	"Watch" -> asc["subscribe_count"]
+	"Name" -> asc["tag_name"],
+	If[KeyExistsQ[asc, "ctime"], "Date" -> FromUnixTime[asc["ctime"]], Nothing],
+	"Count" -> asc["count", "use"],
+	"Watch" -> asc["count", "atten"],
+	If[KeyExistsQ[asc, "content"], "Detail" -> asc["content"], Nothing]
 |>;
 TagGet[i_, t_ /; t <= 0] := AppendTo[i, $fail];
 TagGet[i_, try_] := Block[
 	{get = URLExecute[TagURL@i, "RawJSON"]},
 	If[TagGetQ[get],
 		AppendTo[$block, Inactive[TagGet][i, try - 1]];
-		retry++; Return[Nothing]
+		Return[Nothing]
 	];
-	finish++;
-	TagFormat[get["result"]]
+	TagFormat[get["data"]]
 ];
 VideoTagInfo[tid_] := TagFormat@URLExecute[TagURL@tid, "RawJSON"];
 TagRange[a_, b_] := Block[
@@ -47,17 +48,17 @@ TagRange[a_, b_] := Block[
 Options[TagRangeExport] = {Format -> "WXF", Path -> FileNameJoin[{$BilibiliLinkData, "Tag", "VideoTagInfo"}]};
 TagRangeExport[a_, b_, OptionsPattern[]] := Block[
 	{name = StringRiffle[{"Tag_", a, "-", b, "." <> OptionValue[Format]}, ""]},
-	Export[FileNameJoin[{OptionValue[dir], name}], TagRange[a, b], PerformanceGoal -> "Size"]
+	If[FileExistsQ@FileNameJoin[{OptionValue[Path], name}], Return[name]];
+	CreateFile@FileNameJoin[{OptionValue[Path], name <> ".temp"}];
+	Export[FileNameJoin[{OptionValue[Path], name}], TagRange[a, b], PerformanceGoal -> "Size"]
 ];
-Options[CrawlerVideoTag] = {"BatchSize" -> 1000, Path -> FileNameJoin[{$BilibiliLinkData, "Tag", "VideoTagInfo"}]};
-CrawlerVideoTag[max_ : 800 * 10^4, OptionsPattern[]] := Block[
+CrawlerVideoTag[max_Integer : 800 * 10^4, OptionsPattern[
+	{"BatchSize" -> 1000, Path -> FileNameJoin[{$BilibiliLinkData, "Tag", "VideoTagInfo"}], Format -> "WXF"}
+]] := Block[
 	{retry = 0, finish = 0, expt, $blocks, $task},
-	expt = Inactive[TagRangeExport][#, # + OptionValue["BatchSize"] - 1, OptionValue[Path]]&;
-	$blocks = Table[expt[i], {i, 1, max, OptionValue["BatchSize"]}];
-	$task = ParallelSubmit[Activate[#]]& /@ $blocks;
-	Monitor[WaitAll[$task], {finish, retry}]
+	expt = TagRangeExport[#, # + OptionValue["BatchSize"] - 1, Path -> OptionValue[Path], Format -> "WXF"]&;
+	AbortableMap[expt, Range[ 1, max, OptionValue["BatchSize"]]]
 ];
-
 SetAttributes[
 	{},
 	{Protected, ReadProtected}
