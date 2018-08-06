@@ -14,4 +14,4 @@ docs/.build/
 
 
 # Notebook
-*.nb
+# *.nb

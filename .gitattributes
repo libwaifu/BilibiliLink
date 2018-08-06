@@ -7,3 +7,5 @@ Documentation/ linguist-documentation
 Config/ linguist-language=perl
 BilibiliLinkLoader.m linguist-language=ruby
 Packages/__Dev/*.m linguist-language=mercury
+# lfs track notebook
+*.nb filter=lfs diff=lfs merge=lfs -text
