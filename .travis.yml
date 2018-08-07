@@ -25,6 +25,8 @@ before_deploy:
   - git tag -a "$nVer" -m "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
   - cd ${GITHUB_REPO}
   # 清理工程文件
+  - rm -rf Packages/Crawlers
+  - rm -rf Packages/__Dev
   - rm -rf docs
   - rm -f .gitignore
   - rm -f .gitattributes
